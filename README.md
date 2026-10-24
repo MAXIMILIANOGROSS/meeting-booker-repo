@@ -9,7 +9,7 @@ No se conecta a LinkedIn ni envía nada por ti, así que no arriesgas tu cuenta.
 Requiere [Node.js 18+](https://nodejs.org) y una [API key de Anthropic](https://console.anthropic.com).
 
 ```bash
-git clone https://github.com/TU_USUARIO/meeting-booker.git
+git clone https://github.com/MAXIMILIANOGROSS/meeting-booker-repo.git
 cd meeting-booker
 cp .env.example .env     # pega tu ANTHROPIC_API_KEY
 npm start
