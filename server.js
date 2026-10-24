@@ -3,13 +3,23 @@
 const http = require('http'), fs = require('fs'), path = require('path');
 try { for (const l of fs.readFileSync('.env', 'utf8').split('\n')) { const m = l.match(/^\s*([A-Z_]+)\s*=\s*(.*)\s*$/); if (m && !process.env[m[1]]) process.env[m[1]] = m[2]; } } catch {}
 const KEY = process.env.ANTHROPIC_API_KEY, MODEL = process.env.MODEL || 'claude-sonnet-5-5', PORT = process.env.PORT || 3000;
-if (!KEY) { console.error('Falta ANTHROPIC_API_KEY. Copia .env.example a .env y rellénala.'); process.exit(1); }
+const PROVIDER = process.env.PROVIDER || 'ollama', OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:7b';
+if (PROVIDER === 'anthropic' && !KEY) { console.error('Falta ANTHROPIC_API_KEY. Copia .env.example a .env y rellénala.'); process.exit(1); }
 const send = (res, code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
 http.createServer(async (req, res) => {
   if (req.method === 'POST' && req.url === '/api/ask') {
     let body = ''; for await (const c of req) { body += c; if (body.length > 20000) return send(res, 413, { error: 'Demasiado largo' }); }
     try {
       const { prompt } = JSON.parse(body);
+      if (PROVIDER === 'ollama') {
+        const o = await fetch('http://127.0.0.1:11434/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ model: OLLAMA_MODEL, stream: false, format: 'json', messages: [{ role: 'user', content: String(prompt) }] }) })
+          .catch(() => null);
+        if (!o) return send(res, 502, { error: 'Ollama no está en marcha. Abre la app Ollama o ejecuta: ollama serve' });
+        const oj = await o.json();
+        if (!o.ok) return send(res, o.status, { error: oj.error || 'Error de Ollama (¿descargaste el modelo?)' });
+        return send(res, 200, { text: oj.message?.content || '' });
+      }
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-api-key': KEY, 'anthropic-version': '2023-06-01' },

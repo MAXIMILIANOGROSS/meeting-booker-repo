@@ -19,7 +19,7 @@ button{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(
 button.on,button.pri{background:var(--ac);border-color:var(--ac);color:#fff}
 button:disabled{opacity:.5;cursor:default}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px}
-textarea,input{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px;margin:4px 0 10px}
+textarea,input,select{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px;margin:4px 0 10px}
 textarea{min-height:70px;resize:vertical}label{font-size:12px;color:var(--mut)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>.sp{flex:1}
 .tag{font-size:11px;border:1px solid var(--ac);color:var(--ac);border-radius:99px;padding:1px 8px}
@@ -68,6 +68,8 @@ function render(){
     h+=`<div class="card"><label>Qué ofreces</label><textarea id="me" placeholder="Ej.: desarrollo de webs y apps para hostelería">${esc(S.me)}</textarea>
     <label>Cliente ideal (cargo, tamaño, sector, señales)</label><textarea id="icp">${esc(S.icp)}</textarea>
     <label>Tu disponibilidad para reuniones</label><input id="av" value="${esc(S.avail)}" placeholder="Ej.: martes y jueves de 10:00 a 13:00">
+    <label>Buscar empresas que contratan (freehire.me, gratis)</label>
+    <div class="row"><input id="fq" value="react OR frontend" style="flex:2" placeholder="palabras clave"><select id="fr"><option value="eu,uk">Europa</option><option value="global">Global</option><option value="latam">LatAm</option><option value="north_america">Norteamérica</option></select><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><input id="fd" type="number" value="14" style="width:70px" title="días"><button id="find" ${busy?'disabled':''}>Buscar</button></div>
     <label>Pega prospectos, uno por línea: Nombre, Cargo, Empresa, nota</label><textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea>
     <div class="row"><button id="add">Añadir leads</button><span class="sp"></span><button class="pri" id="go" ${busy||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div></div>`+
     L.map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div><span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-del="${l.id}">✕</button></div>`).join('');
@@ -100,7 +102,13 @@ function bind(){
   const g=s=>document.querySelector(s),on=(s,f)=>document.querySelectorAll(s).forEach(f);
   if(g('#me')){g('#me').oninput=e=>{S.me=e.target.value;save()};g('#icp').oninput=e=>{S.icp=e.target.value;save()};g('#av').oninput=e=>{S.avail=e.target.value;save()};
     g('#add').onclick=()=>{const t=g('#new').value;if(!t.trim())return;S.leads.push(...parseLeads(t));save();render()};
-    g('#go').onclick=scoreAll}
+    g('#go').onclick=scoreAll;
+    g('#find').onclick=async()=>{busy='Buscando empresas…';render();
+      try{const q=new URLSearchParams({q:g('#fq').value,region:g('#fr').value,seniority:g('#fs').value,days:g('#fd').value,limit:40});
+        const r=await fetch('/api/leads?'+q),j=await r.json();if(!r.ok)throw new Error(j.error);
+        const have=new Set(S.leads.map(l=>l.company.toLowerCase()));let n=0;
+        for(const l of j.leads){const k=l.company.toLowerCase();if(have.has(k))continue;have.add(k);S.leads.push({id:Date.now()+Math.random(),status:'new',...l});n++}
+        save();busy=j.warn||`${n} empresas nuevas añadidas.`}catch(e){busy='Error: '+e.message}render()}}
   on('[data-del]',b=>b.onclick=()=>{S.leads=S.leads.filter(l=>String(l.id)!==b.dataset.del);save();render()});
   const f=id=>S.leads.find(l=>String(l.id)===String(id));
   on('[data-msg]',t=>t.oninput=()=>{f(t.dataset.msg).msg=t.value;save()});
