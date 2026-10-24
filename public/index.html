@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Meeting Booker</title>
+<title>Booker Brother</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="icon" href="/assets/booker-brother/icons/estrella-96.webp"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f6f4f1;--fg:#1c1a18;--card:#fff;--mut:#7a746d;--bd:#e4dfd9;--ac:#d9531e;--ok:#2e8b57;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141211;--fg:#f1ece6;--card:#1d1a18;--mut:#9a938b;--bd:#332e2a;--ac:#f07a3e;--ok:#4cc38a;color-scheme:dark}}
@@ -26,22 +27,56 @@ textarea{min-height:70px;resize:vertical}label{font-size:12px;color:var(--mut)}
 .mut{color:var(--mut);font-size:13px}.warn{background:var(--card);border:1px dashed var(--ac);border-radius:12px;padding:10px;margin-bottom:12px;font-size:13px}
 .bars{display:flex;gap:8px;align-items:flex-end;height:70px}.bars div{flex:1;text-align:center;font-size:11px;color:var(--mut)}
 .bars i{display:block;background:var(--ac);border-radius:4px 4px 0 0;margin-bottom:2px}
+</style>
+<style>
+/* Booker Brother · tokens (ver DESIGN.md) */
+:root{--sage:#9BAF8B;--navy:#102B49;--cream:#FFF9EC;--coral:#EF514B;--amber:#FFB43B;--teal:#48C5C9;--ink:#18251F;
+--font:'Nunito',ui-rounded,system-ui,-apple-system,sans-serif;--r-s:8px;--r-m:14px;--r-l:22px;--sh:0 2px 0 rgba(16,43,73,.08),0 8px 20px rgba(16,43,73,.07);--t:.18s ease;
+--bg:var(--cream);--fg:var(--ink);--card:#fff;--mut:#52625a;--bd:#e7dcc4;--ac:var(--navy);--ok:#1f8f6a}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1e33;--fg:#fff9ec;--card:#102B49;--mut:#b7c4cf;--bd:#244566;--ac:var(--amber);--ok:var(--teal)}}
+body{font-family:var(--font)}
+.card,.st{border-radius:var(--r-m);box-shadow:var(--sh)}button,textarea,input,select{border-radius:var(--r-s);font-family:var(--font);transition:background var(--t),transform var(--t)}
+button:hover:not(:disabled){transform:translateY(-1px)}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) button.on,:root:not([data-theme="light"]) button.pri{color:var(--navy)}}
+h1{font-weight:800;font-size:28px}.bars i{background:var(--amber)}.tag{border-color:var(--teal);color:var(--ok)}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:14px}.brand .sub{margin:0}.brand img{width:64px;height:auto;animation:bob 4s ease-in-out infinite}
+.empty{text-align:center;padding:22px}.empty img{width:120px;height:auto;margin-bottom:6px}.empty p{margin:0;color:var(--mut)}
+.flash{display:flex;align-items:center;gap:14px;border-color:var(--amber);animation:pop .35s ease}.flash img{width:110px;height:auto}.flash b{font-size:18px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}@keyframes pop{from{transform:scale(.96);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+body{background:linear-gradient(rgba(16,43,73,.30),rgba(16,43,73,.10)),url(/assets/booker-brother/backgrounds/marte-1600.webp) center/cover fixed no-repeat #102B49;min-height:100vh}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:linear-gradient(rgba(8,22,38,.72),rgba(8,22,38,.55)),url(/assets/booker-brother/backgrounds/marte-1600.webp)}}
+main{position:relative;z-index:1}
+.brand{background:rgba(255,249,236,.94);border-radius:var(--r-l);padding:12px 18px;box-shadow:var(--sh)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand,:root:not([data-theme="light"]) .foot,:root:not([data-theme="light"]) #view>.mut{background:rgba(16,43,73,.94)}}
+#view>.mut{background:rgba(255,249,236,.92);padding:8px 12px;border-radius:var(--r-s)}
+.ni{vertical-align:-6px;margin-right:6px;width:22px;height:22px}
+.ban{display:block;width:100%;height:130px;object-fit:cover;border-radius:var(--r-m);margin-bottom:10px;box-shadow:var(--sh)}
+.foot{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap;margin:22px 0 8px;background:rgba(255,249,236,.92);border-radius:var(--r-l);padding:12px 16px;box-shadow:var(--sh)}.foot img{height:84px;width:auto;max-width:100%}
+.peek{position:fixed;left:0;bottom:0;width:170px;height:auto;pointer-events:none;z-index:0}
+@media(max-width:1100px){.peek{display:none}}
 </style></head><body><main>
-<h1>Meeting Booker</h1>
-<div class="sub">Claude puntúa y redacta. Tú apruebas y envías. Sin automatizar tu cuenta de LinkedIn.</div>
+<header class="brand"><img src="/assets/booker-brother/mascot/booker-principal-160.webp" alt="" width="64" height="78"><div><h1>Booker Brother</h1>
+<div class="sub">Encuentra empresas, redacta el mensaje y agenda la reunión. Tú apruebas y envías.</div></div></header>
 <div class="stats" id="stats"></div>
 <nav id="nav"></nav>
 <div id="view"></div>
+<footer class="foot"><img src="/assets/booker-brother/mascot/booker-vistas-640.webp" alt="" loading="lazy"><img src="/assets/booker-brother/mascot/booker-libreta-320.webp" alt="" loading="lazy"></footer>
 </main>
+<img class="peek" src="/assets/booker-brother/mascot/booker-primer-plano-360.webp" alt="" loading="lazy">
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const def=()=>({icp:'',me:'',avail:'',leads:[],meetings:[]});
+const def=()=>({icp:'',me:'',avail:'',leads:[],meetings:[],profile:{},auto:{on:false,hours:6,q:'react OR frontend',region:'eu,uk',seniority:'',days:14,last:0,msg:''}});
 function load(){try{return Object.assign(def(),JSON.parse(localStorage.getItem('amb')||'null')||{})}catch(e){return def()}}
-let S=load(),tab='leads',busy='',sample=null,sampleOk=true;
-const save=()=>{try{localStorage.setItem('amb',JSON.stringify(S))}catch(e){}};
+let S=def(),tab='leads',busy='',sample=true,sampleOk=true,dirty=false,rev=0;
+let st=null;const save=()=>{dirty=true;clearTimeout(st);st=setTimeout(async()=>{try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:S,rev})});const j=await r.json();if(r.status===409)await pull(true);else{rev=j.rev;dirty=false}}catch(e){}},400)};
+async function pull(force){try{const j=await(await fetch('/api/state')).json();if(force||(!dirty&&j.rev!==rev)){S=Object.assign(def(),j.state);rev=j.rev;dirty=false;const a=document.activeElement;if(force||!a||!/INPUT|TEXTAREA|SELECT/.test(a.tagName))render()}}catch(e){}}
+setInterval(()=>pull(false),15000);pull(true);
 sample=true;sampleOk=true;
-const TABS=[['leads','1 · Leads'],['approve','2 · Aprobar'],['replies','3 · Respuestas'],['meets','4 · Reuniones']];
+const TABS=[['leads','1 · Leads'],['approve','2 · Aprobar'],['replies','3 · Respuestas'],['meets','4 · Reuniones'],['cv','5 · Mi CV']];
 const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d};
 async function ask(prompt){const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Error del servidor');return JSON.parse(j.text.replace(/```json|```/g,'').trim())}
 function parseLeads(t){return t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const p=l.split(/[,|;]/).map(x=>x.trim());return{id:Date.now()+Math.random(),name:p[0]||'',role:p[1]||'',company:p[2]||'',note:p.slice(3).join(', '),status:'new'}})}
@@ -57,44 +92,67 @@ async function analyze(id){
   try{const r=await ask(`Respuesta de un prospecto a mi mensaje de LinkedIn: «${t}»\nMi disponibilidad: ${S.avail||'sin indicar'}\nDevuelve SOLO JSON: {"intent":"interesado|pregunta|ahora no|no","suggested":"respuesta en español, breve; si hay interés propón hasta 3 horarios de mi disponibilidad; si no, cierra con amabilidad"}`);
     l.intent=r.intent;l.suggested=r.suggested;l.status='replied';save()}catch(e){busy='Error: '+(e.message||e.code||'no se pudo');render();return}
   busy='';render()}
+const IC={leads:'remolino',approve:'check',replies:'reloj',meets:'calendario',cv:'estrella'},SC={leads:'portal',approve:'oficina',replies:'escribiendo'};
+const banner=t=>SC[t]?`<img class="ban" src="/assets/booker-brother/scenes/${SC[t]}.webp" alt="" loading="lazy">`:'';
+let flash=false,cvLead='';const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brother/mascot/';
+const empty=(t,img='booker-principal-160')=>`<div class="card empty"><img src="${M}${img.endsWith('360')?img+'.webp':img+'.webp'}" alt="" loading="lazy"><p>${t}</p></div>`;
+const link=l=>{const m=(l.note||'').match(/https?:\/\/\S+/);return m?`<a href="${esc(m[0])}" target="_blank" rel="noopener" style="color:var(--ac)">Ver oferta ↗</a> `:''};
 function render(){
   const L=S.leads,ws=weekStart();
   const wk=S.meetings.filter(m=>new Date(m.when)>=ws).length;
   $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wk]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
-  $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}">${n}</button>`).join('');
+  $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}"><img class="ni" src="/assets/booker-brother/icons/${IC[k]}-96.webp" alt="">${n}</button>`).join('');
   document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
   const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn">${esc(busy)}</div>`:'');
+  h+=banner(tab);
   if(tab==='leads'){
     h+=`<div class="card"><label>Qué ofreces</label><textarea id="me" placeholder="Ej.: desarrollo de webs y apps para hostelería">${esc(S.me)}</textarea>
     <label>Cliente ideal (cargo, tamaño, sector, señales)</label><textarea id="icp">${esc(S.icp)}</textarea>
     <label>Tu disponibilidad para reuniones</label><input id="av" value="${esc(S.avail)}" placeholder="Ej.: martes y jueves de 10:00 a 13:00">
     <label>Buscar empresas que contratan (freehire.me, gratis)</label>
-    <div class="row"><input id="fq" value="react OR frontend" style="flex:2" placeholder="palabras clave"><select id="fr"><option value="eu,uk">Europa</option><option value="global">Global</option><option value="latam">LatAm</option><option value="north_america">Norteamérica</option></select><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><input id="fd" type="number" value="14" style="width:70px" title="días"><button id="find" ${busy?'disabled':''}>Buscar</button></div>
+    <div class="row"><input id="fq" value="${esc(S.auto.q)}" style="flex:2" placeholder="palabras clave"><select id="fr"><option value="eu,uk">Europa</option><option value="global">Global</option><option value="latam">LatAm</option><option value="north_america">Norteamérica</option></select><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><input id="fd" type="number" value="${esc(S.auto.days)}" style="width:70px" title="días"><button id="find" ${busy?'disabled':''}>Buscar</button><button id="week" ${busy?'disabled':''}>Última semana</button></div>
+    <div class="row"><label><input type="checkbox" id="aon" ${S.auto.on?'checked':''} style="width:auto;margin:0"> Automático cada</label><input id="ah" type="number" value="${S.auto.hours}" style="width:70px"><span class="mut sp">horas · ${S.auto.last?'última: '+new Date(S.auto.last).toLocaleTimeString('es-ES'):'sin ejecutar'} ${esc(S.auto.msg||'')}</span><button id="arun" ${busy?'disabled':''}>Ejecutar ahora</button></div>
     <label>Pega prospectos, uno por línea: Nombre, Cargo, Empresa, nota</label><textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea>
     <div class="row"><button id="add">Añadir leads</button><span class="sp"></span><button class="pri" id="go" ${busy||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div></div>`+
-    L.map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div><span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-del="${l.id}">✕</button></div>`).join('');
+    L.map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div>${link(l)}<span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-cv="${l.id}">CV</button><button data-del="${l.id}">✕</button></div>`).join('');
   }
   if(tab==='approve'){
     const q=L.filter(l=>l.status==='drafted').sort((a,b)=>b.score-a.score);
-    h+=q.length?'':'<div class="card mut">No hay borradores. Añade leads y pulsa Puntuar.</div>';
-    h+=q.map(l=>`<div class="card"><div class="row"><b class="sp">${esc(l.name)} <span class="mut">${esc(l.role)}, ${esc(l.company)}</span></b><span class="tag">encaje ${l.score}</span></div><div class="mut">${esc(l.reason)}</div>
-    <textarea data-msg="${l.id}">${esc(l.msg)}</textarea><div class="row"><button class="pri" data-send="${l.id}">Copiar y marcar enviado</button><button data-skip="${l.id}">Descartar</button></div></div>`).join('');
+    h+=q.length?'':empty('No hay borradores. Añade leads y pulsa Puntuar y redactar.','booker-saludando-360');
+    h+=q.map(l=>`<div class="card"><div class="row"><b class="sp">${esc(l.name)} <span class="mut">${esc(l.role)}, ${esc(l.company)}</span></b><span class="tag">encaje ${l.score}</span></div><div class="mut">${esc(l.reason)} ${link(l)}</div>
+    <textarea data-msg="${l.id}">${esc(l.msg)}</textarea><div class="row"><button data-li="${l.id}">Abrir en LinkedIn</button><button class="pri" data-send="${l.id}">Copiar y marcar enviado</button><button data-skip="${l.id}">Descartar</button></div></div>`).join('');
     h+=q.length?'<div class="mut">Pega el mensaje tú mismo en LinkedIn. Así nada se envía sin que lo veas.</div>':'';
   }
   if(tab==='replies'){
     const q=L.filter(l=>['sent','replied'].includes(l.status));
-    h+=q.length?'':'<div class="card mut">Aún no hay mensajes enviados.</div>';
+    h+=q.length?'':empty('Aún no has enviado mensajes. Cuando alguien responda, pégalo aquí.');
     h+=q.map(l=>`<div class="card"><b>${esc(l.name)}</b> <span class="mut">${esc(l.company)}</span>${l.intent?` <span class="tag">${esc(l.intent)}</span>`:''}
     <textarea data-rep="${l.id}" placeholder="Pega aquí su respuesta">${esc(l.reply||'')}</textarea>
     <div class="row"><button data-an="${l.id}" ${busy||!sampleOk?'disabled':''}>Analizar con Claude</button></div>
     ${l.suggested?`<label>Respuesta sugerida</label><textarea>${esc(l.suggested)}</textarea><div class="row"><input type="datetime-local" data-when="${l.id}" style="width:auto"><button class="pri" data-book="${l.id}">Agendar reunión</button><button data-lost="${l.id}">Cerrar</button></div>`:''}</div>`).join('');
   }
+  if(tab==='cv'){
+    const P=S.profile||{},F=[['name','Nombre completo'],['title','Titular'],['email','Correo'],['phone','Teléfono'],['location','Ciudad, país'],['links','Enlaces (portfolio, GitHub, LinkedIn)']];
+    const T=[['summary','Sobre ti (2-3 frases, con tus palabras)'],['skills','Habilidades, separadas por comas'],['experience','Experiencia: puesto, empresa, fechas y qué lograste'],['projects','Proyectos: nombre, qué hace y con qué'],['education','Formación'],['languages','Idiomas y nivel']];
+    const l=S.leads.find(x=>String(x.id)===String(cvLead)),c=l&&l.cv;
+    h+=`<div class="card"><b>Tu perfil</b><div class="mut">Solo se usa lo que escribas aquí. No se inventa nada: lo que falte, el CV lo marca.</div>`+F.map(([k,n])=>`<label>${n}</label><input data-p="${k}" value="${esc(P[k])}">`).join('')+T.map(([k,n])=>`<label>${n}</label><textarea data-p="${k}">${esc(P[k])}</textarea>`).join('')+`</div>`;
+    h+=`<div class="card"><label>Oferta para la que crear el CV</label><select id="cvsel"><option value="">Elige una oferta…</option>${S.leads.map(x=>`<option value="${x.id}" ${String(x.id)===String(cvLead)?'selected':''}>${esc(x.company)} · ${esc((x.role||'').replace('Contrata: ',''))}</option>`).join('')}</select>${l?link(l):''}<div class="row"><button class="pri" id="cvgen" ${busy||!l||!P.name?'disabled':''}>Crear CV a medida</button>${!P.name?'<span class="mut">Escribe tu nombre primero.</span>':''}</div></div>`;
+    if(c){
+      h+=`<div class="card"><b>Encaje con la oferta</b><div class="mut">Cubre: ${esc(arr(c.cubre).join(', ')||'sin datos')}</div><div class="mut">Falta o no consta en tu perfil: ${esc(arr(c.faltan).join(', ')||'nada')}</div></div>
+      <div class="card"><b>${esc(P.name)}</b> <span class="mut">${esc(c.titular||'')}</span><label>Resumen</label><textarea data-cvf="resumen">${esc(c.resumen)}</textarea><p><b>Habilidades</b> ${esc(arr(c.habilidades).join(' · '))}</p>
+      ${arr(c.experiencia).map(e=>`<p><b>${esc(e.puesto||e)}</b> ${esc(e.empresa)} <span class="mut">${esc(e.fechas)}</span><br>${arr(e.logros).map(x=>'• '+esc(x)).join('<br>')}</p>`).join('')}
+      ${arr(c.proyectos).map(p=>`<p><b>${esc(p.nombre||p)}</b> <span class="mut">${esc(p.tecnologias)}</span><br>${esc(p.descripcion)}</p>`).join('')}</div>
+      <div class="card"><div class="row"><button id="cvpdf">Descargar PDF</button></div><label>Correo de la empresa (búscalo en la oferta o en su web)</label><input id="cvto" type="email" value="${esc(l.to||'')}" placeholder="rrhh@empresa.com"><label>Asunto</label><input data-cvf="asunto" value="${esc(c.asunto)}"><label>Mensaje</label><textarea data-cvf="email">${esc(c.email)}</textarea>
+      <div class="row"><button class="pri" id="cvsend" ${busy?'disabled':''}>Enviar CV con el PDF adjunto</button>${l.cvSent?`<span class="mut">Enviado el ${esc(new Date(l.cvSent).toLocaleString('es-ES'))}</span>`:''}</div><div class="mut">Necesita el correo SMTP configurado en .env (ver README). Solo se envía al confirmar.</div></div>`;
+    }
+  }
   if(tab==='meets'){
+    if(flash)h+=`<div class="card flash"><img src="${M}booker-celebrando-360.webp" alt=""><b>¡Reunión agendada!</b></div>`;
     const days=['L','M','X','J','V'],c=[0,0,0,0,0];
     S.meetings.filter(m=>new Date(m.when)>=ws).forEach(m=>{const d=(new Date(m.when).getDay()+6)%7;if(d<5)c[d]++});
     h+=`<div class="card"><div class="bars">${c.map((n,i)=>`<div><i style="height:${n*18}px"></i>${n}<br>${days[i]}</div>`).join('')}</div></div>`;
     const ms=[...S.meetings].sort((a,b)=>new Date(a.when)-new Date(b.when));
-    h+=ms.length?ms.map(m=>`<div class="card row"><b class="sp">${esc(new Date(m.when).toLocaleString('es-ES',{weekday:'short',hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}))}</b><span>${esc(m.name)}</span><span class="mut">${esc(m.company)}</span></div>`).join(''):'<div class="card mut">Sin reuniones todavía.</div>';
+    h+=ms.length?ms.map(m=>`<div class="card row"><b class="sp">${esc(new Date(m.when).toLocaleString('es-ES',{weekday:'short',hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}))}</b><span>${esc(m.name)}</span><span class="mut">${esc(m.company)}</span></div>`).join(''):empty('Sin reuniones todavía. Cuando agendes una, aparecerá aquí.','booker-organizando-calendario-360');
   }
   v.innerHTML=h;bind();
 }
@@ -103,6 +161,11 @@ function bind(){
   if(g('#me')){g('#me').oninput=e=>{S.me=e.target.value;save()};g('#icp').oninput=e=>{S.icp=e.target.value;save()};g('#av').oninput=e=>{S.avail=e.target.value;save()};
     g('#add').onclick=()=>{const t=g('#new').value;if(!t.trim())return;S.leads.push(...parseLeads(t));save();render()};
     g('#go').onclick=scoreAll;
+    const A=S.auto;g('#fr').value=A.region;g('#fs').value=A.seniority;
+    for(const [id,k] of [['#fq','q'],['#fr','region'],['#fs','seniority'],['#fd','days']])g(id).oninput=g(id).onchange=e=>{A[k]=e.target.value;save()};
+    g('#week').onclick=()=>{g('#fd').value=7;A.days=7;save();g('#find').click()};
+    g('#aon').onchange=e=>{A.on=e.target.checked;save()};g('#ah').oninput=e=>{A.hours=+e.target.value||6;save()};
+    g('#arun').onclick=async()=>{busy='Ejecutando… puede tardar';render();try{await fetch('/api/run',{method:'POST'})}catch(e){}busy='';await pull(true)};
     g('#find').onclick=async()=>{busy='Buscando empresas…';render();
       try{const q=new URLSearchParams({q:g('#fq').value,region:g('#fr').value,seniority:g('#fs').value,days:g('#fd').value,limit:40});
         const r=await fetch('/api/leads?'+q),j=await r.json();if(!r.ok)throw new Error(j.error);
@@ -113,11 +176,25 @@ function bind(){
   const f=id=>S.leads.find(l=>String(l.id)===String(id));
   on('[data-msg]',t=>t.oninput=()=>{f(t.dataset.msg).msg=t.value;save()});
   on('[data-send]',b=>b.onclick=async()=>{const l=f(b.dataset.send);try{await navigator.clipboard.writeText(l.msg)}catch(e){}l.status='sent';save();render()});
+  on('[data-li]',b=>b.onclick=async()=>{const l=f(b.dataset.li);try{await navigator.clipboard.writeText(l.msg)}catch(e){}window.open('https://www.linkedin.com/search/results/people/?keywords='+encodeURIComponent(l.company+' CTO OR engineering manager OR head of engineering'),'_blank')});
+  on('[data-cv]',b=>b.onclick=()=>{cvLead=b.dataset.cv;tab='cv';render()});
+  on('[data-p]',t=>t.oninput=()=>{S.profile[t.dataset.p]=t.value;save()});
+  on('[data-cvf]',t=>t.oninput=()=>{f(cvLead).cv[t.dataset.cvf]=t.value;save()});
+  if(g('#cvsel')){
+    g('#cvsel').onchange=e=>{cvLead=e.target.value;render()};
+    g('#cvgen').onclick=async()=>{const l=f(cvLead);busy='Creando el CV a medida… puede tardar un minuto';render();
+      try{const r=await fetch('/api/cv/generate',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,lead:{role:l.role,company:l.company,note:l.note,desc:l.desc}})});const j=await r.json();if(!r.ok)throw new Error(j.error);l.cv=j.cv;save();busy=''}catch(e){busy='Error: '+e.message}render()};
+    if(g('#cvpdf')){
+      g('#cvpdf').onclick=async()=>{const l=f(cvLead);try{const r=await fetch('/api/cv/pdf',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,cv:l.cv})});if(!r.ok)throw new Error((await r.json()).error);const a=document.createElement('a');a.href=URL.createObjectURL(await r.blob());a.download=`CV-${S.profile.name||'candidato'}-${l.company}.pdf`.replace(/\s+/g,'-');a.click()}catch(e){busy='Error: '+e.message;render()}};
+      g('#cvsend').onclick=async()=>{const l=f(cvLead),to=g('#cvto').value.trim();l.to=to;save();
+        if(!/^\S+@\S+\.\S+$/.test(to)){busy='Escribe un correo de empresa válido.';render();return}
+        if(!confirm(`¿Enviar tu CV a ${to} (${l.company})?`))return;busy='Enviando…';render();
+        try{const r=await fetch('/api/cv/send',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,cv:l.cv,to,subject:l.cv.asunto,body:l.cv.email})});const j=await r.json();if(!r.ok)throw new Error(j.error);l.cvSent=Date.now();save();busy='CV enviado a '+to}catch(e){busy='Error: '+e.message}render()}}}
   on('[data-skip]',b=>b.onclick=()=>{f(b.dataset.skip).status='lost';save();render()});
   on('[data-rep]',t=>t.oninput=()=>{f(t.dataset.rep).reply=t.value;save()});
   on('[data-an]',b=>b.onclick=()=>analyze(f(b.dataset.an).id));
   on('[data-lost]',b=>b.onclick=()=>{f(b.dataset.lost).status='lost';save();render()});
-  on('[data-book]',b=>b.onclick=()=>{const l=f(b.dataset.book),w=document.querySelector(`[data-when="${b.dataset.book}"]`).value;if(!w)return;S.meetings.push({when:w,name:l.name,company:l.company});l.status='booked';save();tab='meets';render()});
+  on('[data-book]',b=>b.onclick=()=>{const l=f(b.dataset.book),w=document.querySelector(`[data-when="${b.dataset.book}"]`).value;if(!w)return;S.meetings.push({when:w,name:l.name,company:l.company});l.status='booked';save();tab='meets';flash=true;setTimeout(()=>{flash=false;if(tab==='meets')render()},4000);render()});
 }
 render();
 </script></body></html>

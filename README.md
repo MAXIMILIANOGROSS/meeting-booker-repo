@@ -9,7 +9,7 @@ No se conecta a LinkedIn ni envía nada por ti, así que no arriesgas tu cuenta.
 Requiere [Node.js 18+](https://nodejs.org) y una [API key de Anthropic](https://console.anthropic.com).
 
 ```bash
-git clone https://github.com/MAXIMILIANOGROSS/meeting-booker-repo.git
+git clone https://github.com/TU_USUARIO/meeting-booker.git
 cd meeting-booker
 cp .env.example .env     # pega tu ANTHROPIC_API_KEY
 npm start
@@ -32,3 +32,13 @@ Abre http://localhost:3000
 - Revisa cada mensaje: Claude solo conoce lo que escribes en el lead.
 
 MIT
+
+## CV a medida y envío por correo
+
+1. Pestaña **Mi CV**: rellena tu perfil. Solo se usa lo que escribas; la app no inventa empleos, cifras ni habilidades.
+2. Elige una oferta y pulsa **Crear CV a medida**. Verás qué requisitos cubres y cuáles faltan.
+3. **Descargar PDF** o **Enviar CV** con el PDF adjunto al correo de la empresa (lo buscas tú en la oferta o su web).
+
+Para enviar necesitas SMTP en `.env`. Con Gmail: activa la verificación en dos pasos, crea una *contraseña de aplicación* en tu cuenta de Google y pon `SMTP_USER=tucorreo@gmail.com` y `SMTP_PASS=` la contraseña de aplicación (no la normal). Cada envío exige confirmación.
+
+Tras actualizar, ejecuta `npm install` (añade `pdfkit` y `nodemailer`).
