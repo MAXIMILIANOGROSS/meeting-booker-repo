@@ -113,8 +113,8 @@ const empty=(t,img='booker-principal-160')=>`<div class="card empty"><img src="$
 const link=l=>{const m=(l.note||'').match(/https?:\/\/\S+/);return m?`<a href="${esc(m[0])}" target="_blank" rel="noopener" style="color:var(--ac)">Ver oferta ↗</a> `:''};
 function render(){
   const L=S.leads,ws=weekStart();
-  const wk=S.meetings.filter(m=>new Date(m.when)>=ws).length;
-  $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wk]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
+  const wkMeet=S.meetings.filter(m=>new Date(m.when)>=ws).length;
+  $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wkMeet]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
   $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}"><img class="ni" src="/assets/booker-brody/icons/${IC[k]}-96.webp" alt="">${n}</button>`).join('');
   document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;if(!wk())busy='';render()});
   const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn">${esc(busy)}</div>`:'');
