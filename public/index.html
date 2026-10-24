@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meeting Booker</title>
+<style>
+:root{--bg:#f6f4f1;--fg:#1c1a18;--card:#fff;--mut:#7a746d;--bd:#e4dfd9;--ac:#d9531e;--ok:#2e8b57;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141211;--fg:#f1ece6;--card:#1d1a18;--mut:#9a938b;--bd:#332e2a;--ac:#f07a3e;--ok:#4cc38a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141211;--fg:#f1ece6;--card:#1d1a18;--mut:#9a938b;--bd:#332e2a;--ac:#f07a3e;--ok:#4cc38a;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:0 0 2px}.sub{color:var(--mut);font-size:13px;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.st{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px}
+.st b{display:block;font-size:24px;color:var(--ac)}.st span{font-size:12px;color:var(--mut)}
+nav{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto}
+nav button{flex:1;white-space:nowrap}
+button{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.on,button.pri{background:var(--ac);border-color:var(--ac);color:#fff}
+button:disabled{opacity:.5;cursor:default}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px}
+textarea,input{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:8px;margin:4px 0 10px}
+textarea{min-height:70px;resize:vertical}label{font-size:12px;color:var(--mut)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>.sp{flex:1}
+.tag{font-size:11px;border:1px solid var(--ac);color:var(--ac);border-radius:99px;padding:1px 8px}
+.mut{color:var(--mut);font-size:13px}.warn{background:var(--card);border:1px dashed var(--ac);border-radius:12px;padding:10px;margin-bottom:12px;font-size:13px}
+.bars{display:flex;gap:8px;align-items:flex-end;height:70px}.bars div{flex:1;text-align:center;font-size:11px;color:var(--mut)}
+.bars i{display:block;background:var(--ac);border-radius:4px 4px 0 0;margin-bottom:2px}
+</style></head><body><main>
+<h1>Meeting Booker</h1>
+<div class="sub">Claude puntúa y redacta. Tú apruebas y envías. Sin automatizar tu cuenta de LinkedIn.</div>
+<div class="stats" id="stats"></div>
+<nav id="nav"></nav>
+<div id="view"></div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const def=()=>({icp:'',me:'',avail:'',leads:[],meetings:[]});
+function load(){try{return Object.assign(def(),JSON.parse(localStorage.getItem('amb')||'null')||{})}catch(e){return def()}}
+let S=load(),tab='leads',busy='',sample=null,sampleOk=true;
+const save=()=>{try{localStorage.setItem('amb',JSON.stringify(S))}catch(e){}};
+sample=true;sampleOk=true;
+const TABS=[['leads','1 · Leads'],['approve','2 · Aprobar'],['replies','3 · Respuestas'],['meets','4 · Reuniones']];
+const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d};
+async function ask(prompt){const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Error del servidor');return JSON.parse(j.text.replace(/```json|```/g,'').trim())}
+function parseLeads(t){return t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const p=l.split(/[,|;]/).map(x=>x.trim());return{id:Date.now()+Math.random(),name:p[0]||'',role:p[1]||'',company:p[2]||'',note:p.slice(3).join(', '),status:'new'}})}
+async function scoreAll(){
+  const todo=S.leads.filter(l=>l.status==='new');
+  for(let i=0;i<todo.length;i++){const l=todo[i];busy=`Procesando ${i+1} de ${todo.length}…`;render();
+    try{const r=await ask(`Eres asistente de prospección B2B. Mi oferta: ${S.me}\nCliente ideal: ${S.icp}\nProspecto: ${l.name}, ${l.role}, ${l.company}. Notas: ${l.note}\nDevuelve SOLO JSON: {"score":0-100,"reason":"una frase","message":"mensaje de LinkedIn en español, máximo 60 palabras, cercano, sin inventar datos que no estén arriba, termina con una pregunta"}`);
+      l.score=r.score;l.reason=r.reason;l.msg=r.message;l.status='drafted'}catch(e){busy='Error: '+(e.message||e.code||'no se pudo');render();return}
+    save()}
+  busy='';tab='approve';render()}
+async function analyze(id){
+  const l=S.leads.find(x=>x.id===id);const t=l.reply||'';if(!t)return;busy='Analizando…';render();
+  try{const r=await ask(`Respuesta de un prospecto a mi mensaje de LinkedIn: «${t}»\nMi disponibilidad: ${S.avail||'sin indicar'}\nDevuelve SOLO JSON: {"intent":"interesado|pregunta|ahora no|no","suggested":"respuesta en español, breve; si hay interés propón hasta 3 horarios de mi disponibilidad; si no, cierra con amabilidad"}`);
+    l.intent=r.intent;l.suggested=r.suggested;l.status='replied';save()}catch(e){busy='Error: '+(e.message||e.code||'no se pudo');render();return}
+  busy='';render()}
+function render(){
+  const L=S.leads,ws=weekStart();
+  const wk=S.meetings.filter(m=>new Date(m.when)>=ws).length;
+  $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wk]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
+  $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}">${n}</button>`).join('');
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+  const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn">${esc(busy)}</div>`:'');
+  if(tab==='leads'){
+    h+=`<div class="card"><label>Qué ofreces</label><textarea id="me" placeholder="Ej.: desarrollo de webs y apps para hostelería">${esc(S.me)}</textarea>
+    <label>Cliente ideal (cargo, tamaño, sector, señales)</label><textarea id="icp">${esc(S.icp)}</textarea>
+    <label>Tu disponibilidad para reuniones</label><input id="av" value="${esc(S.avail)}" placeholder="Ej.: martes y jueves de 10:00 a 13:00">
+    <label>Pega prospectos, uno por línea: Nombre, Cargo, Empresa, nota</label><textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea>
+    <div class="row"><button id="add">Añadir leads</button><span class="sp"></span><button class="pri" id="go" ${busy||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div></div>`+
+    L.map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div><span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-del="${l.id}">✕</button></div>`).join('');
+  }
+  if(tab==='approve'){
+    const q=L.filter(l=>l.status==='drafted').sort((a,b)=>b.score-a.score);
+    h+=q.length?'':'<div class="card mut">No hay borradores. Añade leads y pulsa Puntuar.</div>';
+    h+=q.map(l=>`<div class="card"><div class="row"><b class="sp">${esc(l.name)} <span class="mut">${esc(l.role)}, ${esc(l.company)}</span></b><span class="tag">encaje ${l.score}</span></div><div class="mut">${esc(l.reason)}</div>
+    <textarea data-msg="${l.id}">${esc(l.msg)}</textarea><div class="row"><button class="pri" data-send="${l.id}">Copiar y marcar enviado</button><button data-skip="${l.id}">Descartar</button></div></div>`).join('');
+    h+=q.length?'<div class="mut">Pega el mensaje tú mismo en LinkedIn. Así nada se envía sin que lo veas.</div>':'';
+  }
+  if(tab==='replies'){
+    const q=L.filter(l=>['sent','replied'].includes(l.status));
+    h+=q.length?'':'<div class="card mut">Aún no hay mensajes enviados.</div>';
+    h+=q.map(l=>`<div class="card"><b>${esc(l.name)}</b> <span class="mut">${esc(l.company)}</span>${l.intent?` <span class="tag">${esc(l.intent)}</span>`:''}
+    <textarea data-rep="${l.id}" placeholder="Pega aquí su respuesta">${esc(l.reply||'')}</textarea>
+    <div class="row"><button data-an="${l.id}" ${busy||!sampleOk?'disabled':''}>Analizar con Claude</button></div>
+    ${l.suggested?`<label>Respuesta sugerida</label><textarea>${esc(l.suggested)}</textarea><div class="row"><input type="datetime-local" data-when="${l.id}" style="width:auto"><button class="pri" data-book="${l.id}">Agendar reunión</button><button data-lost="${l.id}">Cerrar</button></div>`:''}</div>`).join('');
+  }
+  if(tab==='meets'){
+    const days=['L','M','X','J','V'],c=[0,0,0,0,0];
+    S.meetings.filter(m=>new Date(m.when)>=ws).forEach(m=>{const d=(new Date(m.when).getDay()+6)%7;if(d<5)c[d]++});
+    h+=`<div class="card"><div class="bars">${c.map((n,i)=>`<div><i style="height:${n*18}px"></i>${n}<br>${days[i]}</div>`).join('')}</div></div>`;
+    const ms=[...S.meetings].sort((a,b)=>new Date(a.when)-new Date(b.when));
+    h+=ms.length?ms.map(m=>`<div class="card row"><b class="sp">${esc(new Date(m.when).toLocaleString('es-ES',{weekday:'short',hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}))}</b><span>${esc(m.name)}</span><span class="mut">${esc(m.company)}</span></div>`).join(''):'<div class="card mut">Sin reuniones todavía.</div>';
+  }
+  v.innerHTML=h;bind();
+}
+function bind(){
+  const g=s=>document.querySelector(s),on=(s,f)=>document.querySelectorAll(s).forEach(f);
+  if(g('#me')){g('#me').oninput=e=>{S.me=e.target.value;save()};g('#icp').oninput=e=>{S.icp=e.target.value;save()};g('#av').oninput=e=>{S.avail=e.target.value;save()};
+    g('#add').onclick=()=>{const t=g('#new').value;if(!t.trim())return;S.leads.push(...parseLeads(t));save();render()};
+    g('#go').onclick=scoreAll}
+  on('[data-del]',b=>b.onclick=()=>{S.leads=S.leads.filter(l=>String(l.id)!==b.dataset.del);save();render()});
+  const f=id=>S.leads.find(l=>String(l.id)===String(id));
+  on('[data-msg]',t=>t.oninput=()=>{f(t.dataset.msg).msg=t.value;save()});
+  on('[data-send]',b=>b.onclick=async()=>{const l=f(b.dataset.send);try{await navigator.clipboard.writeText(l.msg)}catch(e){}l.status='sent';save();render()});
+  on('[data-skip]',b=>b.onclick=()=>{f(b.dataset.skip).status='lost';save();render()});
+  on('[data-rep]',t=>t.oninput=()=>{f(t.dataset.rep).reply=t.value;save()});
+  on('[data-an]',b=>b.onclick=()=>analyze(f(b.dataset.an).id));
+  on('[data-lost]',b=>b.onclick=()=>{f(b.dataset.lost).status='lost';save();render()});
+  on('[data-book]',b=>b.onclick=()=>{const l=f(b.dataset.book),w=document.querySelector(`[data-when="${b.dataset.book}"]`).value;if(!w)return;S.meetings.push({when:w,name:l.name,company:l.company});l.status='booked';save();tab='meets';render()});
+}
+render();
+</script></body></html>
