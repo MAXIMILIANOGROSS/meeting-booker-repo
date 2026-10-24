@@ -1,13 +1,13 @@
-# Booker Brother · sistema de diseño (primera entrega)
+# Booker Brody · sistema de diseño (primera entrega)
 
 Rama sugerida: `feature/booker-brother-visual-universe`
 
-## Tokens (en `public/index.html`, bloque «Booker Brother · tokens»)
+## Tokens (en `public/index.html`, bloque «Booker Brody · tokens»)
 Colores: sage `#9BAF8B` (mascota, progreso) · navy `#102B49` (acciones principales, estructura) · cream `#FFF9EC` (fondo) · coral `#EF514B` (alertas suaves) · amber `#FFB43B` (selección, datos clave, acento en modo oscuro) · teal `#48C5C9` (estados positivos, foco) · ink `#18251F` (texto).
 Tipografía: Nunito (OFL, gratuita), con `ui-rounded` y `system-ui` como respaldo. Radios 8 / 14 / 22 px. Foco visible turquesa de 3 px.
 Modo oscuro automático (`prefers-color-scheme`). Animaciones desactivadas con `prefers-reduced-motion`.
 
-## Assets (`public/assets/booker-brother/mascot/`, WebP con transparencia)
+## Assets (`public/assets/booker-brody/mascot/`, WebP con transparencia)
 - `booker-principal-160.webp`, `booker-principal-512.webp`: mascota principal (de `hugo-alien.png`).
 - `booker-saludando-360.webp`, `booker-celebrando-360.webp`: recortadas de la lámina de marca.
 Las demás poses de la lámina no se han recortado: tienen fondos de escena o están cortadas. No existen como archivo hasta que se generen.

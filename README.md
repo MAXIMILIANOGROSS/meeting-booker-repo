@@ -1,44 +1,74 @@
-# Meeting Booker
+<p align="center">
+  <img src="public/assets/booker-brody/mascot/booker-principal-512.webp" width="200" alt="Booker, la mascota de Booker Brody">
+</p>
 
-Flujo de prospección con **aprobación manual**: Claude puntúa el encaje de cada lead y redacta el mensaje; tú lo revisas, lo envías tú mismo y gestionas respuestas y reuniones.
+<h1 align="center">Booker Brody</h1>
 
-No se conecta a LinkedIn ni envía nada por ti, así que no arriesgas tu cuenta.
+<p align="center">
+  Encuentra empresas que contratan, redacta el mensaje, crea un CV a medida de cada oferta y agenda la reunión.<br>
+  Tú apruebas y envías. Funciona en tu ordenador.
+</p>
 
-## Uso
+<p align="center">
+  <img src="public/assets/booker-brody/scenes/portal.webp" width="240" alt="">
+  <img src="public/assets/booker-brody/scenes/oficina.webp" width="240" alt="">
+  <img src="public/assets/booker-brody/scenes/escribiendo.webp" width="240" alt="">
+</p>
 
-Requiere [Node.js 18+](https://nodejs.org) y una [API key de Anthropic](https://console.anthropic.com).
+## Qué hace
+
+1. **Leads**: busca empresas con ofertas recientes en [freehire.me](https://freehire.me) (gratis, sin clave), con filtros de palabras clave, región, nivel y días. Puede repetirse solo cada pocas horas.
+2. **Aprobar**: una IA puntúa el encaje de cada empresa y redacta un mensaje. Lo revisas, lo copias y lo envías tú.
+3. **Respuestas**: pegas la respuesta de la empresa; la IA clasifica la intención y sugiere qué contestar.
+4. **Reuniones**: agenda y contador semanal.
+5. **Mi CV**: a partir de tu perfil y de una oferta, crea un CV a medida, indica qué requisitos cubres y cuáles faltan, lo descarga en PDF y puede enviarlo por correo con el PDF adjunto.
+
+No automatiza tu cuenta de LinkedIn: no hay API pública para ello y automatizarla arriesga tu cuenta. El botón «Abrir en LinkedIn» solo copia el mensaje y abre la búsqueda de personas de la empresa.
+
+## Instalación
+
+Necesitas [Node.js 18+](https://nodejs.org) y una de estas dos IAs:
+
+- **Gratis y local**: [Ollama](https://ollama.com) y `ollama pull qwen2.5:7b`.
+- **Claude por API** (de pago): una clave en [console.anthropic.com](https://console.anthropic.com) y `PROVIDER=anthropic` en `.env`.
 
 ```bash
-git clone https://github.com/TU_USUARIO/meeting-booker.git
-cd meeting-booker
-cp .env.example .env     # pega tu ANTHROPIC_API_KEY
+git clone https://github.com/MAXIMILIANOGROSS/meeting-booker-repo.git
+cd meeting-booker-repo
+npm install
+cp .env.example .env
 npm start
 ```
 
-Abre http://localhost:3000
+Abre http://localhost:3000 (cambia el puerto con `PORT=3001 npm start`).
 
-## Flujo
+## Configuración (`.env`)
 
-1. **Leads**: tu oferta, cliente ideal y disponibilidad; pega prospectos (`Nombre, Cargo, Empresa, nota`).
-2. **Aprobar**: edita el borrador, copia y pégalo en LinkedIn.
-3. **Respuestas**: pega la respuesta; Claude clasifica la intención y sugiere contestación con horarios.
-4. **Reuniones**: agenda y ve el contador semanal.
+| Variable | Para qué |
+|---|---|
+| `PROVIDER` | `ollama` (por defecto) o `anthropic` |
+| `OLLAMA_MODEL` | Modelo local, por defecto `qwen2.5:7b` |
+| `ANTHROPIC_API_KEY`, `MODEL` | Solo si usas Claude por API |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Para enviar el CV por correo |
 
-## Notas
+**Enviar con Gmail**: activa la verificación en dos pasos, crea una *contraseña de aplicación* en tu cuenta de Google y úsala en `SMTP_PASS` (no tu contraseña normal). Cada envío pide confirmación. El correo de la empresa lo pones tú: las ofertas no incluyen contacto.
 
-- La API key solo vive en `.env` (ignorado por git). El servidor escucha solo en `127.0.0.1`.
-- Los datos se guardan en `localStorage` del navegador. Úsalo siempre desde el mismo navegador.
-- Cada puntuación consume tokens de tu cuenta de API.
-- Revisa cada mensaje: Claude solo conoce lo que escribes en el lead.
+## Privacidad
+
+- Tus datos (perfil, leads, reuniones) se guardan en `data.json`, en tu carpeta. Está en `.gitignore` y no se sube.
+- `.env` también está ignorado. Nunca subas tus claves.
+- El servidor escucha solo en `127.0.0.1`.
+
+## Diseño
+
+Sistema de diseño, paleta y lista de assets en [`DESIGN.md`](DESIGN.md).
+
+## Límites conocidos
+
+- Un modelo local pequeño puede redactar peor que Claude: revisa siempre mensajes y CV antes de enviar.
+- El CV solo usa lo que escribas en tu perfil; lo que falte se marca, no se inventa.
+- Sin pruebas automáticas todavía.
+
+## Licencia
 
 MIT
-
-## CV a medida y envío por correo
-
-1. Pestaña **Mi CV**: rellena tu perfil. Solo se usa lo que escribas; la app no inventa empleos, cifras ni habilidades.
-2. Elige una oferta y pulsa **Crear CV a medida**. Verás qué requisitos cubres y cuáles faltan.
-3. **Descargar PDF** o **Enviar CV** con el PDF adjunto al correo de la empresa (lo buscas tú en la oferta o su web).
-
-Para enviar necesitas SMTP en `.env`. Con Gmail: activa la verificación en dos pasos, crea una *contraseña de aplicación* en tu cuenta de Google y pon `SMTP_USER=tucorreo@gmail.com` y `SMTP_PASS=` la contraseña de aplicación (no la normal). Cada envío exige confirmación.
-
-Tras actualizar, ejecuta `npm install` (añade `pdfkit` y `nodemailer`).

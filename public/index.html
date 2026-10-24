@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Booker Brother</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="icon" href="/assets/booker-brother/icons/estrella-96.webp"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<title>Booker Brody</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="icon" href="/assets/booker-brody/icons/estrella-96.webp"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f6f4f1;--fg:#1c1a18;--card:#fff;--mut:#7a746d;--bd:#e4dfd9;--ac:#d9531e;--ok:#2e8b57;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141211;--fg:#f1ece6;--card:#1d1a18;--mut:#9a938b;--bd:#332e2a;--ac:#f07a3e;--ok:#4cc38a;color-scheme:dark}}
@@ -29,7 +29,7 @@ textarea{min-height:70px;resize:vertical}label{font-size:12px;color:var(--mut)}
 .bars i{display:block;background:var(--ac);border-radius:4px 4px 0 0;margin-bottom:2px}
 </style>
 <style>
-/* Booker Brother · tokens (ver DESIGN.md) */
+/* Booker Brody · tokens (ver DESIGN.md) */
 :root{--sage:#9BAF8B;--navy:#102B49;--cream:#FFF9EC;--coral:#EF514B;--amber:#FFB43B;--teal:#48C5C9;--ink:#18251F;
 --font:'Nunito',ui-rounded,system-ui,-apple-system,sans-serif;--r-s:8px;--r-m:14px;--r-l:22px;--sh:0 2px 0 rgba(16,43,73,.08),0 8px 20px rgba(16,43,73,.07);--t:.18s ease;
 --bg:var(--cream);--fg:var(--ink);--card:#fff;--mut:#52625a;--bd:#e7dcc4;--ac:var(--navy);--ok:#1f8f6a}
@@ -46,8 +46,8 @@ h1{font-weight:800;font-size:28px}.bars i{background:var(--amber)}.tag{border-co
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <style>
-body{background:linear-gradient(rgba(16,43,73,.30),rgba(16,43,73,.10)),url(/assets/booker-brother/backgrounds/marte-1600.webp) center/cover fixed no-repeat #102B49;min-height:100vh}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:linear-gradient(rgba(8,22,38,.72),rgba(8,22,38,.55)),url(/assets/booker-brother/backgrounds/marte-1600.webp)}}
+body{background:linear-gradient(rgba(16,43,73,.30),rgba(16,43,73,.10)),url(/assets/booker-brody/backgrounds/marte-1600.webp) center/cover fixed no-repeat #102B49;min-height:100vh}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:linear-gradient(rgba(8,22,38,.72),rgba(8,22,38,.55)),url(/assets/booker-brody/backgrounds/marte-1600.webp)}}
 main{position:relative;z-index:1}
 .brand{background:rgba(255,249,236,.94);border-radius:var(--r-l);padding:12px 18px;box-shadow:var(--sh)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .brand,:root:not([data-theme="light"]) .foot,:root:not([data-theme="light"]) #view>.mut{background:rgba(16,43,73,.94)}}
@@ -58,14 +58,14 @@ main{position:relative;z-index:1}
 .peek{position:fixed;left:0;bottom:0;width:170px;height:auto;pointer-events:none;z-index:0}
 @media(max-width:1100px){.peek{display:none}}
 </style></head><body><main>
-<header class="brand"><img src="/assets/booker-brother/mascot/booker-principal-160.webp" alt="" width="64" height="78"><div><h1>Booker Brother</h1>
+<header class="brand"><img src="/assets/booker-brody/mascot/booker-principal-160.webp" alt="" width="64" height="78"><div><h1>Booker Brody</h1>
 <div class="sub">Encuentra empresas, redacta el mensaje y agenda la reunión. Tú apruebas y envías.</div></div></header>
 <div class="stats" id="stats"></div>
 <nav id="nav"></nav>
 <div id="view"></div>
-<footer class="foot"><img src="/assets/booker-brother/mascot/booker-vistas-640.webp" alt="" loading="lazy"><img src="/assets/booker-brother/mascot/booker-libreta-320.webp" alt="" loading="lazy"></footer>
+<footer class="foot"><img src="/assets/booker-brody/mascot/booker-vistas-640.webp" alt="" loading="lazy"><img src="/assets/booker-brody/mascot/booker-libreta-320.webp" alt="" loading="lazy"></footer>
 </main>
-<img class="peek" src="/assets/booker-brother/mascot/booker-primer-plano-360.webp" alt="" loading="lazy">
+<img class="peek" src="/assets/booker-brody/mascot/booker-primer-plano-360.webp" alt="" loading="lazy">
 <script>
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -93,16 +93,30 @@ async function analyze(id){
     l.intent=r.intent;l.suggested=r.suggested;l.status='replied';save()}catch(e){busy='Error: '+(e.message||e.code||'no se pudo');render();return}
   busy='';render()}
 const IC={leads:'remolino',approve:'check',replies:'reloj',meets:'calendario',cv:'estrella'},SC={leads:'portal',approve:'oficina',replies:'escribiendo'};
-const banner=t=>SC[t]?`<img class="ban" src="/assets/booker-brother/scenes/${SC[t]}.webp" alt="" loading="lazy">`:'';
-let flash=false,cvLead='';const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brother/mascot/';
+const banner=t=>SC[t]?`<img class="ban" src="/assets/booker-brody/scenes/${SC[t]}.webp" alt="" loading="lazy">`:'';
+function csv(t){const r=[];let row=[],f='',q=false;t=t.replace(/^\uFEFF/,'');for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}else if(c=='"')q=true;else if(c==','){row.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;row.push(f);f='';if(row.some(x=>x))r.push(row);row=[]}else f+=c}if(f||row.length){row.push(f);if(row.some(x=>x))r.push(row)}return r}
+function rows(t){const a=csv(t);while(a.length&&a[0].filter(Boolean).length<2)a.shift();if(!a.length)return[];const k=a.shift().map(x=>x.trim().toLowerCase());return a.map(r=>Object.fromEntries(k.map((n,i)=>[n,(r[i]||'').trim()])))}
+const pick=(r,...n)=>{for(const k of n)if(r[k])return r[k];return''};
+async function importLinkedIn(files){
+  const P=S.profile,out=[],ign=[];let n={};
+  for(const f of files){const nm=f.name.toLowerCase(),R=rows(await f.text());
+    if(nm.includes('position')){P.experience=R.map(r=>`${pick(r,'title')} - ${pick(r,'company name','company')} (${pick(r,'started on','start date')} - ${pick(r,'finished on','end date')||'actualidad'}). ${pick(r,'description')}`.trim()).join('\n');n.puestos=R.length}
+    else if(nm.includes('education')){P.education=R.map(r=>`${pick(r,'degree name','degree')} - ${pick(r,'school name','school')} (${pick(r,'start date')} - ${pick(r,'end date')})`).join('\n');n.estudios=R.length}
+    else if(nm.includes('skill')){P.skills=R.map(r=>pick(r,'name')).filter(Boolean).join(', ');n.habilidades=R.length}
+    else if(nm.includes('language')){P.languages=R.map(r=>pick(r,'name')+(pick(r,'proficiency')?` (${pick(r,'proficiency')})`:'')).join(', ');n.idiomas=R.length}
+    else if(nm.includes('email')){const m=R.find(r=>/yes|true|sí|si/i.test(r.primary))||R[0];if(m&&!P.email)P.email=pick(m,'email address')}
+    else if(nm.startsWith('profile')){const r=R[0]||{};if(!P.name)P.name=(pick(r,'first name')+' '+pick(r,'last name')).trim();if(!P.title&&pick(r,'headline'))P.title=pick(r,'headline');if(!P.summary&&pick(r,'summary'))P.summary=pick(r,'summary');if(!P.location&&pick(r,'geo location','address'))P.location=pick(r,'geo location','address');n.perfil=1}
+    else ign.push(f.name)}
+  save();return Object.entries(n).map(([k,v])=>`${v} ${k}`).join(', ')+(ign.length?` · No reconocidos: ${ign.join(', ')}`:'')}
+let flash=false,cvLead='';const wk=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
 const empty=(t,img='booker-principal-160')=>`<div class="card empty"><img src="${M}${img.endsWith('360')?img+'.webp':img+'.webp'}" alt="" loading="lazy"><p>${t}</p></div>`;
 const link=l=>{const m=(l.note||'').match(/https?:\/\/\S+/);return m?`<a href="${esc(m[0])}" target="_blank" rel="noopener" style="color:var(--ac)">Ver oferta ↗</a> `:''};
 function render(){
   const L=S.leads,ws=weekStart();
   const wk=S.meetings.filter(m=>new Date(m.when)>=ws).length;
   $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wk]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
-  $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}"><img class="ni" src="/assets/booker-brother/icons/${IC[k]}-96.webp" alt="">${n}</button>`).join('');
-  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+  $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}"><img class="ni" src="/assets/booker-brody/icons/${IC[k]}-96.webp" alt="">${n}</button>`).join('');
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;if(!wk())busy='';render()});
   const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn">${esc(busy)}</div>`:'');
   h+=banner(tab);
   if(tab==='leads'){
@@ -110,10 +124,10 @@ function render(){
     <label>Cliente ideal (cargo, tamaño, sector, señales)</label><textarea id="icp">${esc(S.icp)}</textarea>
     <label>Tu disponibilidad para reuniones</label><input id="av" value="${esc(S.avail)}" placeholder="Ej.: martes y jueves de 10:00 a 13:00">
     <label>Buscar empresas que contratan (freehire.me, gratis)</label>
-    <div class="row"><input id="fq" value="${esc(S.auto.q)}" style="flex:2" placeholder="palabras clave"><select id="fr"><option value="eu,uk">Europa</option><option value="global">Global</option><option value="latam">LatAm</option><option value="north_america">Norteamérica</option></select><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><input id="fd" type="number" value="${esc(S.auto.days)}" style="width:70px" title="días"><button id="find" ${busy?'disabled':''}>Buscar</button><button id="week" ${busy?'disabled':''}>Última semana</button></div>
-    <div class="row"><label><input type="checkbox" id="aon" ${S.auto.on?'checked':''} style="width:auto;margin:0"> Automático cada</label><input id="ah" type="number" value="${S.auto.hours}" style="width:70px"><span class="mut sp">horas · ${S.auto.last?'última: '+new Date(S.auto.last).toLocaleTimeString('es-ES'):'sin ejecutar'} ${esc(S.auto.msg||'')}</span><button id="arun" ${busy?'disabled':''}>Ejecutar ahora</button></div>
+    <div class="row"><input id="fq" value="${esc(S.auto.q)}" style="flex:2" placeholder="palabras clave"><select id="fr"><option value="eu,uk">Europa</option><option value="global">Global</option><option value="latam">LatAm</option><option value="north_america">Norteamérica</option></select><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><input id="fd" type="number" value="${esc(S.auto.days)}" style="width:70px" title="días"><button id="find" ${wk()?'disabled':''}>Buscar</button><button id="week" ${wk()?'disabled':''}>Última semana</button></div>
+    <div class="row"><label><input type="checkbox" id="aon" ${S.auto.on?'checked':''} style="width:auto;margin:0"> Automático cada</label><input id="ah" type="number" value="${S.auto.hours}" style="width:70px"><span class="mut sp">horas · ${S.auto.last?'última: '+new Date(S.auto.last).toLocaleTimeString('es-ES'):'sin ejecutar'} ${esc(S.auto.msg||'')}</span><button id="arun" ${wk()?'disabled':''}>Ejecutar ahora</button></div>
     <label>Pega prospectos, uno por línea: Nombre, Cargo, Empresa, nota</label><textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea>
-    <div class="row"><button id="add">Añadir leads</button><span class="sp"></span><button class="pri" id="go" ${busy||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div></div>`+
+    <div class="row"><button id="add">Añadir leads</button><span class="sp"></span><button class="pri" id="go" ${wk()||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div></div>`+
     L.map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div>${link(l)}<span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-cv="${l.id}">CV</button><button data-del="${l.id}">✕</button></div>`).join('');
   }
   if(tab==='approve'){
@@ -128,22 +142,23 @@ function render(){
     h+=q.length?'':empty('Aún no has enviado mensajes. Cuando alguien responda, pégalo aquí.');
     h+=q.map(l=>`<div class="card"><b>${esc(l.name)}</b> <span class="mut">${esc(l.company)}</span>${l.intent?` <span class="tag">${esc(l.intent)}</span>`:''}
     <textarea data-rep="${l.id}" placeholder="Pega aquí su respuesta">${esc(l.reply||'')}</textarea>
-    <div class="row"><button data-an="${l.id}" ${busy||!sampleOk?'disabled':''}>Analizar con Claude</button></div>
+    <div class="row"><button data-an="${l.id}" ${wk()||!sampleOk?'disabled':''}>Analizar con Claude</button></div>
     ${l.suggested?`<label>Respuesta sugerida</label><textarea>${esc(l.suggested)}</textarea><div class="row"><input type="datetime-local" data-when="${l.id}" style="width:auto"><button class="pri" data-book="${l.id}">Agendar reunión</button><button data-lost="${l.id}">Cerrar</button></div>`:''}</div>`).join('');
   }
   if(tab==='cv'){
     const P=S.profile||{},F=[['name','Nombre completo'],['title','Titular'],['email','Correo'],['phone','Teléfono'],['location','Ciudad, país'],['links','Enlaces (portfolio, GitHub, LinkedIn)']];
     const T=[['summary','Sobre ti (2-3 frases, con tus palabras)'],['skills','Habilidades, separadas por comas'],['experience','Experiencia: puesto, empresa, fechas y qué lograste'],['projects','Proyectos: nombre, qué hace y con qué'],['education','Formación'],['languages','Idiomas y nivel']];
     const l=S.leads.find(x=>String(x.id)===String(cvLead)),c=l&&l.cv;
-    h+=`<div class="card"><b>Tu perfil</b><div class="mut">Solo se usa lo que escribas aquí. No se inventa nada: lo que falte, el CV lo marca.</div>`+F.map(([k,n])=>`<label>${n}</label><input data-p="${k}" value="${esc(P[k])}">`).join('')+T.map(([k,n])=>`<label>${n}</label><textarea data-p="${k}">${esc(P[k])}</textarea>`).join('')+`</div>`;
-    h+=`<div class="card"><label>Oferta para la que crear el CV</label><select id="cvsel"><option value="">Elige una oferta…</option>${S.leads.map(x=>`<option value="${x.id}" ${String(x.id)===String(cvLead)?'selected':''}>${esc(x.company)} · ${esc((x.role||'').replace('Contrata: ',''))}</option>`).join('')}</select>${l?link(l):''}<div class="row"><button class="pri" id="cvgen" ${busy||!l||!P.name?'disabled':''}>Crear CV a medida</button>${!P.name?'<span class="mut">Escribe tu nombre primero.</span>':''}</div></div>`;
+    h+=`<div class="card"><b>Importar desde LinkedIn</b><div class="mut">En LinkedIn: Ajustes → Privacidad de los datos → Obtener una copia de tus datos → elige Posiciones, Educación, Habilidades, Idiomas y Perfil. Puede tardar de minutos a 24 horas. Descomprime el ZIP y selecciona aquí los CSV.</div><input type="file" id="lifiles" accept=".csv" multiple><div class="row"><button id="liimp">Importar mis datos</button></div></div>
+    <div class="card"><b>Tu perfil</b><div class="mut">Solo se usa lo que escribas aquí. No se inventa nada: lo que falte, el CV lo marca.</div>`+F.map(([k,n])=>`<label>${n}</label><input data-p="${k}" value="${esc(P[k])}">`).join('')+T.map(([k,n])=>`<label>${n}</label><textarea data-p="${k}">${esc(P[k])}</textarea>`).join('')+`</div>`;
+    h+=`<div class="card"><label>Oferta para la que crear el CV</label><select id="cvsel"><option value="">Elige una oferta…</option>${S.leads.map(x=>`<option value="${x.id}" ${String(x.id)===String(cvLead)?'selected':''}>${esc(x.company)} · ${esc((x.role||'').replace('Contrata: ',''))}</option>`).join('')}</select>${l?link(l):''}<div class="row"><button class="pri" id="cvgen" ${wk()||!l||!P.name?'disabled':''}>Crear CV a medida</button>${!P.name?'<span class="mut">Escribe tu nombre primero.</span>':''}</div></div>`;
     if(c){
       h+=`<div class="card"><b>Encaje con la oferta</b><div class="mut">Cubre: ${esc(arr(c.cubre).join(', ')||'sin datos')}</div><div class="mut">Falta o no consta en tu perfil: ${esc(arr(c.faltan).join(', ')||'nada')}</div></div>
       <div class="card"><b>${esc(P.name)}</b> <span class="mut">${esc(c.titular||'')}</span><label>Resumen</label><textarea data-cvf="resumen">${esc(c.resumen)}</textarea><p><b>Habilidades</b> ${esc(arr(c.habilidades).join(' · '))}</p>
       ${arr(c.experiencia).map(e=>`<p><b>${esc(e.puesto||e)}</b> ${esc(e.empresa)} <span class="mut">${esc(e.fechas)}</span><br>${arr(e.logros).map(x=>'• '+esc(x)).join('<br>')}</p>`).join('')}
       ${arr(c.proyectos).map(p=>`<p><b>${esc(p.nombre||p)}</b> <span class="mut">${esc(p.tecnologias)}</span><br>${esc(p.descripcion)}</p>`).join('')}</div>
       <div class="card"><div class="row"><button id="cvpdf">Descargar PDF</button></div><label>Correo de la empresa (búscalo en la oferta o en su web)</label><input id="cvto" type="email" value="${esc(l.to||'')}" placeholder="rrhh@empresa.com"><label>Asunto</label><input data-cvf="asunto" value="${esc(c.asunto)}"><label>Mensaje</label><textarea data-cvf="email">${esc(c.email)}</textarea>
-      <div class="row"><button class="pri" id="cvsend" ${busy?'disabled':''}>Enviar CV con el PDF adjunto</button>${l.cvSent?`<span class="mut">Enviado el ${esc(new Date(l.cvSent).toLocaleString('es-ES'))}</span>`:''}</div><div class="mut">Necesita el correo SMTP configurado en .env (ver README). Solo se envía al confirmar.</div></div>`;
+      <div class="row"><button class="pri" id="cvsend" ${wk()?'disabled':''}>Enviar CV con el PDF adjunto</button>${l.cvSent?`<span class="mut">Enviado el ${esc(new Date(l.cvSent).toLocaleString('es-ES'))}</span>`:''}</div><div class="mut">Necesita el correo SMTP configurado en .env (ver README). Solo se envía al confirmar.</div></div>`;
     }
   }
   if(tab==='meets'){
@@ -177,6 +192,8 @@ function bind(){
   on('[data-msg]',t=>t.oninput=()=>{f(t.dataset.msg).msg=t.value;save()});
   on('[data-send]',b=>b.onclick=async()=>{const l=f(b.dataset.send);try{await navigator.clipboard.writeText(l.msg)}catch(e){}l.status='sent';save();render()});
   on('[data-li]',b=>b.onclick=async()=>{const l=f(b.dataset.li);try{await navigator.clipboard.writeText(l.msg)}catch(e){}window.open('https://www.linkedin.com/search/results/people/?keywords='+encodeURIComponent(l.company+' CTO OR engineering manager OR head of engineering'),'_blank')});
+  if(g('#liimp'))g('#liimp').onclick=async()=>{const fs=[...g('#lifiles').files];if(!fs.length){busy='Selecciona primero los archivos CSV.';render();return}
+    try{const r=await importLinkedIn(fs);busy=r?'Importado: '+r:'No reconocí ningún archivo. Usa Positions.csv, Education.csv, Skills.csv, Languages.csv o Profile.csv.'}catch(e){busy='Error al leer: '+e.message}render()};
   on('[data-cv]',b=>b.onclick=()=>{cvLead=b.dataset.cv;tab='cv';render()});
   on('[data-p]',t=>t.oninput=()=>{S.profile[t.dataset.p]=t.value;save()});
   on('[data-cvf]',t=>t.oninput=()=>{f(cvLead).cv[t.dataset.cvf]=t.value;save()});

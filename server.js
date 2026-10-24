@@ -1,4 +1,4 @@
-// Meeting Booker: servidor local. Busca, puntúa y redacta solo; el envío lo haces tú.
+// Booker Brody: servidor local. Busca, puntúa y redacta solo; el envío lo haces tú.
 const http = require('http'), fs = require('fs'), path = require('path'), { execFile } = require('child_process');
 try { for (const l of fs.readFileSync('.env', 'utf8').split('\n')) { const m = l.match(/^\s*([A-Z_]+)\s*=\s*(.*)\s*$/); if (m && !process.env[m[1]]) process.env[m[1]] = m[2]; } } catch {}
 const KEY = process.env.ANTHROPIC_API_KEY, MODEL = process.env.MODEL || 'claude-sonnet-5-5', PORT = process.env.PORT || 3000;
@@ -13,7 +13,7 @@ try { const d = JSON.parse(fs.readFileSync(DATA, 'utf8')); S = Object.assign(def
 S.auto = Object.assign(def().auto, S.auto);
 const persist = () => { rev++; fs.writeFileSync(DATA, JSON.stringify({ state: S, rev })); };
 const send = (res, code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(obj)); };
-const clean = t => String(t ?? '').replace(/[^\u0020-\u00FF\u2018\u2019\u201C\u201D\u2013\u2014\u2022\u20AC\n]/g, '');
+const clean = t => String(t ?? '').replace(/\*\*|__|^#+\s*/gm, '').replace(/[^\u0020-\u00FF\u2018\u2019\u201C\u201D\u2013\u2014\u2022\u20AC\n]/g, '');
 const L = a => (Array.isArray(a) ? a : (a ? [a] : [])).map(x => typeof x === 'string' ? x : Object.values(x || {}).join(' - '));
 function buildPdf(p, cv) {
   const PDFDocument = require('pdfkit');
@@ -94,7 +94,7 @@ async function runAuto() {
     }
   } catch (e) { A.msg = 'Error: ' + e.message; }
   A.last = Date.now(); persist(); running = false;
-  if (n) execFile('osascript', ['-e', `display notification "${n} borradores listos para aprobar" with title "Meeting Booker"`], () => {});
+  if (n) execFile('osascript', ['-e', `display notification "${n} borradores listos para aprobar" with title "Booker Brody"`], () => {});
 }
 setInterval(() => { if (S.auto.on && Date.now() - S.auto.last > S.auto.hours * 3600e3) runAuto(); }, 60000);
 
@@ -107,7 +107,7 @@ http.createServer(async (req, res) => {
     if (u === '/api/run' && req.method === 'POST') { await runAuto(); return send(res, 200, { rev }); }
     if (u === '/api/cv/generate' && req.method === 'POST') {
       const { profile: p, lead: l } = JSON.parse(body);
-      const cv = parseJSON(await askAI(`Eres redactor de currículums. Adapta el CV de esta persona a la oferta para que encaje al máximo. REGLAS: usa SOLO datos del perfil; no inventes empleos, títulos, fechas, cifras ni habilidades; puedes reordenar, resumir y usar el vocabulario de la oferta solo si el perfil lo respalda; lo que la oferta pide y el perfil no respalda va en "faltan". Escribe en el idioma de la oferta.\nPERFIL: ${JSON.stringify(p).slice(0, 6000)}\nOFERTA: ${l.role} en ${l.company}. ${l.note}\n${l.desc || ''}\nDevuelve SOLO JSON: {"idioma":"es o en","titular":"","resumen":"3-4 frases","habilidades":["..."],"experiencia":[{"puesto":"","empresa":"","fechas":"","logros":["..."]}],"proyectos":[{"nombre":"","descripcion":"","tecnologias":""}],"formacion":["..."],"idiomas":["..."],"cubre":["requisito de la oferta que el perfil cubre"],"faltan":["requisito que el perfil no respalda"],"asunto":"asunto del email","email":"email de candidatura, máx 120 palabras, directo, sin inventar"}`));
+      const cv = parseJSON(await askAI(`Eres redactor de currículums. Adapta el CV de esta persona a la oferta para que encaje al máximo. REGLAS: usa SOLO datos del perfil; no inventes empleos, títulos, fechas, cifras ni habilidades; escribe en texto plano, sin Markdown ni asteriscos; puedes reordenar, resumir y usar el vocabulario de la oferta solo si el perfil lo respalda; lo que la oferta pide y el perfil no respalda va en "faltan". Escribe en el idioma de la oferta.\nPERFIL: ${JSON.stringify(p).slice(0, 6000)}\nOFERTA: ${l.role} en ${l.company}. ${l.note}\n${l.desc || ''}\nDevuelve SOLO JSON: {"idioma":"es o en","titular":"","resumen":"3-4 frases","habilidades":["..."],"experiencia":[{"puesto":"","empresa":"","fechas":"","logros":["..."]}],"proyectos":[{"nombre":"","descripcion":"","tecnologias":""}],"formacion":["..."],"idiomas":["..."],"cubre":["requisito de la oferta que el perfil cubre"],"faltan":["requisito que el perfil no respalda"],"asunto":"asunto del email","email":"email de candidatura, máx 120 palabras, directo, sin inventar"}`));
       return send(res, 200, { cv });
     }
     if (u === '/api/cv/pdf' && req.method === 'POST') { const b = JSON.parse(body); const pdf = await buildPdf(b.profile, b.cv); res.writeHead(200, { 'Content-Type': 'application/pdf' }); return res.end(pdf); }
@@ -117,4 +117,4 @@ http.createServer(async (req, res) => {
   } catch (e) { return send(res, 500, { error: e.message }); }
   const f = path.join(__dirname, 'public', u === '/' ? 'index.html' : path.normalize(u).replace(/^(\.\.[\/\\])+/, ''));
   fs.readFile(f, (e, d) => { if (e) { res.writeHead(404); return res.end('No encontrado'); } const T = { '.html': 'text/html; charset=utf-8', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.css': 'text/css', '.js': 'text/javascript' }; res.writeHead(200, { 'Content-Type': T[path.extname(f)] || 'application/octet-stream', 'Cache-Control': 'public, max-age=3600' }); res.end(d); });
-}).listen(PORT, '127.0.0.1', () => console.log(`Meeting Booker en http://localhost:${PORT}`));
+}).listen(PORT, '127.0.0.1', () => console.log(`Booker Brody en http://localhost:${PORT}`));
