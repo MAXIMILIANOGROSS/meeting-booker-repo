@@ -89,7 +89,7 @@ async function parseProfile(b) {
 
 async function findLeads(a) {
   const p = new URLSearchParams({ limit: 40 });
-  if (a.q) p.set('q', a.q); if (a.region) p.set('region', a.region); if (a.seniority) p.set('seniority', a.seniority); if (a.days) p.set('posted_within_days', a.days);
+  if (a.q) p.set('q', a.q); if (a.region) p.set('regions', a.region); if (a.seniority) p.set('seniority', a.seniority); if (a.days) p.set('posted_within_days', a.days);
   const r = await fetch(`${FH}/api/v1/jobs/search?${p}`, { headers: { accept: 'application/json' } });
   const j = await r.json().catch(() => null);
   if (!r.ok || !j) throw new Error('freehire no respondió (' + r.status + ')');

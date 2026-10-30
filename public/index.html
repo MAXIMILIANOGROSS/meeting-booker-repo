@@ -57,6 +57,25 @@ main{position:relative;z-index:1}
 .foot{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap;margin:22px 0 8px;background:rgba(255,249,236,.92);border-radius:var(--r-l);padding:12px 16px;box-shadow:var(--sh)}.foot img{height:84px;width:auto;max-width:100%}
 .peek{position:fixed;left:0;bottom:0;width:170px;height:auto;pointer-events:none;z-index:0}
 @media(max-width:1100px){.peek{display:none}}
+</style>
+<style>
+/* Carrusel guiado */
+.car{margin-bottom:12px}.carhead{display:flex;justify-content:space-between;align-items:baseline;background:rgba(255,249,236,.94);border-radius:var(--r-m) var(--r-m) 0 0;padding:10px 16px 4px;font-weight:800}
+.progress{height:6px;background:rgba(255,249,236,.94);margin:0}.progress i{display:block;height:100%;width:11%;background:var(--amber);border-radius:0 4px 4px 0;transition:width .25s ease}
+.trk{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;position:relative;padding:12px 0;cursor:grab;overscroll-behavior-x:contain}
+.trk::-webkit-scrollbar{display:none}.trk.drag{cursor:grabbing;user-select:none}
+.sl{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;background:var(--card);border:1px solid var(--bd);border-radius:var(--r-l);box-shadow:var(--sh);padding:22px;min-width:0}
+.sl h3{font-size:24px;line-height:1.2;margin:4px 0 14px;font-weight:800}.stepn{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.sl textarea{min-height:130px;font-size:17px}.sl input,.sl select{font-size:17px}
+.why,.tip{border-radius:var(--r-s);padding:10px 12px;margin-bottom:10px;font-size:14px}.why{background:rgba(72,197,201,.16);border-left:4px solid var(--teal)}.tip{background:rgba(255,180,59,.2);border-left:4px solid var(--amber)}
+.exs{display:flex;flex-direction:column;gap:6px}.lbl{font-size:12px;color:var(--mut)}
+.chip{text-align:left;white-space:normal;border-radius:var(--r-m);font-size:14px;padding:8px 12px;border-style:dashed}
+.chk{display:flex;gap:8px;align-items:center;font-size:16px;color:var(--fg)}.chk input{width:auto;margin:0}
+.chk2{display:block;width:100%;text-align:left;margin-bottom:6px}.chk2.ok{border-color:var(--ok)}.steps{margin:12px 0;font-size:14px;line-height:1.8}
+.carnav{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,249,236,.94);border-radius:0 0 var(--r-m) var(--r-m);padding:10px 12px}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.dot{width:12px;height:12px;padding:0;border-radius:50%;border:2px solid var(--navy);background:transparent}.dot.done{background:rgba(16,43,73,.35)}.dot.on{background:var(--amber);border-color:var(--navy);transform:scale(1.25)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .carhead,:root:not([data-theme="light"]) .progress,:root:not([data-theme="light"]) .carnav{background:rgba(16,43,73,.94)}:root:not([data-theme="light"]) .dot{border-color:var(--cream)}}
+@media(max-width:520px){.sl{padding:16px}.sl h3{font-size:20px}#cprev,#cnext{padding:8px 10px}}
 </style></head><body><main>
 <header class="brand"><img src="/assets/booker-brody/mascot/booker-principal-160.webp" alt="" width="64" height="78"><div><h1>Booker Brody</h1>
 <div class="sub">Encuentra empresas, redacta el mensaje y agenda la reunión. Tú apruebas y envías.</div></div></header>
@@ -112,7 +131,7 @@ let lim=30;const sortL=()=>[...S.leads].sort((a,b)=>(b.score??-1)-(a.score??-1))
 const cvOpts=()=>{const t=sortL().slice(0,150),s=S.leads.find(x=>String(x.id)===String(cvLead));return s&&!t.includes(s)?[s,...t]:t};
 const leadsBar=()=>{const N=S.leads.length,n=S.leads.filter(l=>l.status==='new').length;return N?`<div class="card row"><span class="sp mut">Mostrando ${Math.min(lim,N)} de ${N} leads, ordenados por encaje</span>${n?`<button id="clr">Borrar los no procesados (${n})</button>`:''}</div>`:''};
 const leadsMore=()=>S.leads.length>lim?`<div class="row"><button id="more">Mostrar más (${S.leads.length-lim})</button></div>`:'';
-let flash=false,cvLead='';const wk=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
+let flash=false,cvLead='',slide=0;const wk=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
 const empty=(t,img='booker-principal-160')=>`<div class="card empty"><img src="${M}${img.endsWith('360')?img+'.webp':img+'.webp'}" alt="" loading="lazy"><p>${t}</p></div>`;
 const link=l=>{const m=(l.note||'').match(/https?:\/\/\S+/);return m?`<a href="${esc(m[0])}" target="_blank" rel="noopener" style="color:var(--ac)">Ver oferta ↗</a> `:''};
 const PK=['name','title','email','phone','location','links','summary','skills','experience','education','languages','projects'];
@@ -127,6 +146,38 @@ ${cvQs.length?`<div class="warn"><b>Para mejorar tu CV, añade:</b><br>${cvQs.ma
 const offerCard=()=>`<div class="card"><b>¿Una oferta que has encontrado tú?</b><div class="mut">Pégala aquí y se añade a tu lista para adaptar el CV. Si no, elige una de tus ofertas abajo.</div>
 <div class="row"><input id="ofco" value="${esc(offer.company)}" placeholder="Empresa" style="flex:1"><input id="ofro" value="${esc(offer.role)}" placeholder="Puesto" style="flex:1"></div>
 <textarea id="ofde" placeholder="Pega aquí el texto completo de la oferta">${esc(offer.desc)}</textarea><div class="row"><button id="ofuse">Usar esta oferta</button></div></div>`;
+const WZ_STEPS=(L)=>{const A=S.auto,fill=v=>!!String(v||'').trim();
+const chips=(id,arr)=>`<div class="exs"><span class="lbl">Toca un ejemplo para usarlo:</span>${arr.map(t=>`<button type="button" class="chip" data-ex="${id}" data-txt="${esc(t)}">${esc(t)}</button>`).join('')}</div>`;
+const box=(why,tip)=>`<div class="why"><b>¿Para qué sirve?</b> ${why}</div><div class="tip"><b>Consejo:</b> ${tip}</div>`;
+return [
+{n:'Qué ofreces',ok:fill(S.me),h:`<h3>¿Qué sabes hacer y qué ofreces?</h3>${box('La IA lo lee antes de escribir cada mensaje, para que suene a ti, y para decidir si una empresa encaja contigo.','una o dos frases: qué haces, para quién y qué consigues con ello.')}<textarea id="me" placeholder="Escribe aquí con tus palabras…">${esc(S.me)}</textarea>${chips('me',['Desarrollador frontend con 2 años de experiencia: creo webs y apps rápidas con React, de principio a fin.','Desarrollo webs y apps para hostelería: cartas digitales, reservas y gestión de turnos.'])}`},
+{n:'Cliente ideal',ok:fill(S.icp),h:`<h3>¿A qué tipo de empresa quieres llegar?</h3>${box('La IA puntúa cada empresa de 0 a 100 según lo parecida que sea a este cliente ideal. Así ves primero las que más te convienen.','piensa en tres cosas: quién decide contratar (cargo), qué empresa es (tamaño y sector) y qué señal indica que te necesitan (por ejemplo, que estén contratando).')}<textarea id="icp" placeholder="Ej.: startups de 10 a 200 personas…">${esc(S.icp)}</textarea>${chips('icp',['Startups tecnológicas de 10 a 200 personas en Europa que contratan desarrolladores frontend. Contacto: CTO o responsable de ingeniería.','Agencias digitales y software houses que publican ofertas de React o JavaScript.'])}`},
+{n:'Disponibilidad',ok:fill(S.avail),h:`<h3>¿Cuándo puedes hacer una reunión?</h3>${box('Cuando una empresa responda con interés, la app te propone horas para reunirte usando esto.','indica días, franja horaria y tu zona horaria, para evitar confusiones.')}<input id="av" value="${esc(S.avail)}" placeholder="Ej.: martes y jueves de 10:00 a 13:00">${chips('av',['Martes y jueves de 10:00 a 13:00 (hora de Canarias)','De lunes a viernes de 16:00 a 18:00'])}`},
+{n:'Qué buscar',ok:fill(A.q),h:`<h3>¿Qué ofertas de trabajo quieres buscar?</h3>${box('La app busca empresas que están contratando ahora. Si una empresa busca a alguien como tú, ya tiene necesidad y presupuesto: es el mejor momento para contactarla.','separa varias palabras con <b>OR</b> para buscar todas a la vez. Cuantas menos palabras, más resultados.')}<input id="fq" value="${esc(A.q)}" placeholder="palabras clave">${chips('fq',['react OR frontend','javascript OR typescript','vue OR angular'])}`},
+{n:'Zona',ok:true,h:`<h3>¿En qué zona del mundo?</h3>${box('Limita la búsqueda a empresas de una región.','para ver ofertas de cualquier país, elige <b>Todo el mundo</b>. Si prefieres una zona concreta, elígela aquí.')}<select id="fr"><option value="">Todo el mundo (sin filtro)</option><option value="eu,uk">Europa y Reino Unido</option><option value="north_america">Norteamérica</option><option value="latam">Latinoamérica</option><option value="apac">Asia-Pacífico</option><option value="mena,africa">Oriente Medio y África</option><option value="global">Remoto abierto a cualquier país</option></select>`},
+{n:'Nivel y fecha',ok:true,h:`<h3>¿Qué nivel y cuán recientes?</h3>${box('El nivel filtra el tipo de puesto. Los días limitan a ofertas publicadas hace poco: las recientes aún tienen pocos candidatos y es más fácil que respondan.','empieza con 7 días para lo más fresco; sube a 14 o 30 si salen pocos resultados.')}<label>Nivel</label><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><label>Publicadas en los últimos (días)</label><input id="fd" type="number" value="${esc(A.days)}" min="1">`},
+{n:'Automático',ok:true,h:`<h3>¿Quieres que busque por ti?</h3>${box('En modo automático, la app busca ofertas y prepara borradores cada cierto tiempo mientras la Terminal esté abierta. <b>Tú apruebas todo antes de enviar nada.</b>','déjalo apagado al principio y usa «Buscar» a mano hasta que veas que los resultados te gustan.')}<label class="chk"><input type="checkbox" id="aon" ${A.on?'checked':''}> Activar el modo automático</label><label>Repetir cada (horas)</label><input id="ah" type="number" value="${A.hours}" min="1"><div class="mut">${A.last?'Última ejecución: '+new Date(A.last).toLocaleTimeString('es-ES'):'Aún sin ejecutar'} ${esc(A.msg||'')}</div><div class="row"><button id="arun" ${wk()?'disabled':''}>Ejecutar ahora</button></div>`},
+{n:'Tus contactos',ok:true,h:`<h3>¿Tienes contactos propios? <span class="mut">(opcional)</span></h3>${box('Si ya conoces empresas o personas a las que quieres escribir, añádelas aquí y la app también las puntúa y les redacta un mensaje.','una persona por línea con este formato: <b>Nombre, Cargo, Empresa, nota</b>.')}<textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea><div class="row"><button id="add">Añadir contactos</button></div>`},
+{n:'Listo',ok:true,fin:true,h:`<h3>¡Todo listo! Ahora lanza la búsqueda</h3><div class="why">Revisa que no falte nada. Toca un apartado para volver a él.</div>${[['Qué ofreces',fill(S.me),0],['Cliente ideal',fill(S.icp),1],['Disponibilidad',fill(S.avail),2],['Qué buscar',fill(A.q),3]].map(([a,b,i])=>`<button type="button" class="chk2 ${b?'ok':''}" data-goto="${i}">${b?'✔':'○'} ${a}</button>`).join('')}<div class="steps"><b>1.</b> Pulsa <b>Buscar</b> para traer empresas que contratan.<br><b>2.</b> Pulsa <b>Puntuar y redactar</b>: la IA las ordena y escribe un mensaje para cada una.<br><b>3.</b> Ve a «2 · Aprobar» para revisar y enviar tú mismo.</div><div class="row"><button class="pri" id="find" ${wk()?'disabled':''}>Buscar</button><button id="week" ${wk()?'disabled':''}>Última semana</button><button class="pri" id="go" ${wk()||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div>`}
+]};
+function wizard(L){const st=WZ_STEPS(L),n=st.length;
+return `<div class="car"><div class="carhead"><span id="cnt">Paso 1 de ${n}</span><span class="mut">Desliza → o usa los botones</span></div><div class="progress"><i id="bar"></i></div>
+<div class="trk">${st.map((s,i)=>`<section class="sl"><div class="stepn">Paso ${i+1} · ${esc(s.n)}</div>${s.h}</section>`).join('')}</div>
+<div class="carnav"><button type="button" id="cprev">← Anterior</button><div class="dots">${st.map((s,i)=>`<button type="button" class="dot ${s.ok?'done':''}" data-goto="${i}" aria-label="Paso ${i+1}: ${esc(s.n)}"></button>`).join('')}</div><button type="button" class="pri" id="cnext">Siguiente →</button></div></div>`}
+function carBind(){const t=document.querySelector('.trk');if(!t)return;const n=t.children.length,q=s=>document.querySelector(s),pitch=()=>t.children[1].offsetLeft-t.children[0].offsetLeft;
+const upd=()=>{q('#cnt').textContent='Paso '+(slide+1)+' de '+n;q('#bar').style.width=((slide+1)/n*100)+'%';document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===slide));q('#cprev').disabled=slide===0;q('#cnext').disabled=slide===n-1};
+const go=(i,smooth)=>{i=Math.max(0,Math.min(n-1,i));slide=i;t.scrollTo({left:t.children[i].offsetLeft,behavior:smooth?'smooth':'auto'});upd()};
+go(slide,false);window.onresize=()=>go(slide,false);
+t.onscroll=()=>{const i=Math.round(t.scrollLeft/pitch());if(i!==slide){slide=i;upd()}};
+q('#cprev').onclick=()=>go(slide-1,true);q('#cnext').onclick=()=>go(slide+1,true);
+document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>go(+b.dataset.goto,true));
+document.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>{const f=q('#'+b.dataset.ex);f.value=b.dataset.txt;f.dispatchEvent(new Event('input'))});
+let dn=false,x0=0,s0=0;
+t.onmousedown=e=>{if(e.target.closest('input,textarea,select,button,a,label'))return;dn=true;x0=e.clientX;s0=t.scrollLeft;t.style.scrollSnapType='none';t.classList.add('drag')};
+window.onmousemove=e=>{if(dn)t.scrollLeft=s0-(e.clientX-x0)};
+window.onmouseup=()=>{if(!dn)return;dn=false;t.style.scrollSnapType='';t.classList.remove('drag');go(Math.round(t.scrollLeft/pitch()),true)};
+if(!window._ck){window._ck=1;document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;if(e.key==='ArrowRight')q('#cnext')&&q('#cnext').click();if(e.key==='ArrowLeft')q('#cprev')&&q('#cprev').click()})}}
+
 function render(){
   const L=S.leads,ws=weekStart();
   const wm=S.meetings.filter(m=>new Date(m.when)>=ws).length;
@@ -136,14 +187,7 @@ function render(){
   const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn">${esc(busy)}</div>`:'');
   h+=banner(tab);
   if(tab==='leads'){
-    h+=`<div class="card"><label>Qué ofreces</label><textarea id="me" placeholder="Ej.: desarrollo de webs y apps para hostelería">${esc(S.me)}</textarea>
-    <label>Cliente ideal (cargo, tamaño, sector, señales)</label><textarea id="icp">${esc(S.icp)}</textarea>
-    <label>Tu disponibilidad para reuniones</label><input id="av" value="${esc(S.avail)}" placeholder="Ej.: martes y jueves de 10:00 a 13:00">
-    <label>Buscar empresas que contratan (freehire.me, gratis)</label>
-    <div class="row"><input id="fq" value="${esc(S.auto.q)}" style="flex:2" placeholder="palabras clave"><select id="fr"><option value="eu,uk">Europa</option><option value="global">Global</option><option value="latam">LatAm</option><option value="north_america">Norteamérica</option></select><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><input id="fd" type="number" value="${esc(S.auto.days)}" style="width:70px" title="días"><button id="find" ${wk()?'disabled':''}>Buscar</button><button id="week" ${wk()?'disabled':''}>Última semana</button></div>
-    <div class="row"><label><input type="checkbox" id="aon" ${S.auto.on?'checked':''} style="width:auto;margin:0"> Automático cada</label><input id="ah" type="number" value="${S.auto.hours}" style="width:70px"><span class="mut sp">horas · ${S.auto.last?'última: '+new Date(S.auto.last).toLocaleTimeString('es-ES'):'sin ejecutar'} ${esc(S.auto.msg||'')}</span><button id="arun" ${wk()?'disabled':''}>Ejecutar ahora</button></div>
-    <label>Pega prospectos, uno por línea: Nombre, Cargo, Empresa, nota</label><textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea>
-    <div class="row"><button id="add">Añadir leads</button><span class="sp"></span><button class="pri" id="go" ${wk()||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div></div>`+
+    h+=wizard(L)+
     leadsBar()+sortL().slice(0,lim).map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div>${link(l)}<span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-cv="${l.id}">CV</button><button data-del="${l.id}">✕</button></div>`).join('')+leadsMore();
   }
   if(tab==='approve'){
@@ -189,6 +233,7 @@ function render(){
 }
 function bind(){
   const g=s=>document.querySelector(s),on=(s,f)=>document.querySelectorAll(s).forEach(f);
+  carBind();
   if(g('#me')){g('#me').oninput=e=>{S.me=e.target.value;save()};g('#icp').oninput=e=>{S.icp=e.target.value;save()};g('#av').oninput=e=>{S.avail=e.target.value;save()};
     g('#add').onclick=()=>{const t=g('#new').value;if(!t.trim())return;S.leads.push(...parseLeads(t));save();render()};
     g('#go').onclick=scoreAll;
