@@ -72,8 +72,8 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const def=()=>({icp:'',me:'',avail:'',leads:[],meetings:[],profile:{},auto:{on:false,hours:6,q:'react OR frontend',region:'eu,uk',seniority:'',days:14,last:0,msg:''}});
 function load(){try{return Object.assign(def(),JSON.parse(localStorage.getItem('amb')||'null')||{})}catch(e){return def()}}
 let S=def(),tab='leads',busy='',sample=true,sampleOk=true,dirty=false,rev=0;
-let st=null;const save=()=>{dirty=true;clearTimeout(st);st=setTimeout(async()=>{try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:S,rev})});const j=await r.json();if(r.status===409)await pull(true);else{rev=j.rev;dirty=false}}catch(e){}},400)};
-async function pull(force){try{const j=await(await fetch('/api/state')).json();if(force||(!dirty&&j.rev!==rev)){S=Object.assign(def(),j.state);rev=j.rev;dirty=false;const a=document.activeElement;if(force||!a||!/INPUT|TEXTAREA|SELECT/.test(a.tagName))render()}}catch(e){}}
+let st=null;const save=()=>{dirty=true;clearTimeout(st);st=setTimeout(async()=>{try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:S,rev})});const j=await r.json();if(r.status===409)await pull(true);else{rev=j.rev;dirty=false}}catch(e){}},800)};
+async function pull(force){try{if(!force){const q=await(await fetch('/api/rev')).json();if(dirty||q.rev===rev)return}const j=await(await fetch('/api/state')).json();if(force||(!dirty&&j.rev!==rev)){S=Object.assign(def(),j.state);rev=j.rev;dirty=false;const a=document.activeElement;if(force||!a||!/INPUT|TEXTAREA|SELECT/.test(a.tagName))render()}}catch(e){}}
 setInterval(()=>pull(false),15000);pull(true);
 sample=true;sampleOk=true;
 const TABS=[['leads','1 · Leads'],['approve','2 · Aprobar'],['replies','3 · Respuestas'],['meets','4 · Reuniones'],['cv','5 · Mi CV']];
@@ -108,13 +108,29 @@ async function importLinkedIn(files){
     else if(nm.startsWith('profile')){const r=R[0]||{};if(!P.name)P.name=(pick(r,'first name')+' '+pick(r,'last name')).trim();if(!P.title&&pick(r,'headline'))P.title=pick(r,'headline');if(!P.summary&&pick(r,'summary'))P.summary=pick(r,'summary');if(!P.location&&pick(r,'geo location','address'))P.location=pick(r,'geo location','address');n.perfil=1}
     else ign.push(f.name)}
   save();return Object.entries(n).map(([k,v])=>`${v} ${k}`).join(', ')+(ign.length?` · No reconocidos: ${ign.join(', ')}`:'')}
+let lim=30;const sortL=()=>[...S.leads].sort((a,b)=>(b.score??-1)-(a.score??-1));
+const cvOpts=()=>{const t=sortL().slice(0,150),s=S.leads.find(x=>String(x.id)===String(cvLead));return s&&!t.includes(s)?[s,...t]:t};
+const leadsBar=()=>{const N=S.leads.length,n=S.leads.filter(l=>l.status==='new').length;return N?`<div class="card row"><span class="sp mut">Mostrando ${Math.min(lim,N)} de ${N} leads, ordenados por encaje</span>${n?`<button id="clr">Borrar los no procesados (${n})</button>`:''}</div>`:''};
+const leadsMore=()=>S.leads.length>lim?`<div class="row"><button id="more">Mostrar más (${S.leads.length-lim})</button></div>`:'';
 let flash=false,cvLead='';const wk=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
 const empty=(t,img='booker-principal-160')=>`<div class="card empty"><img src="${M}${img.endsWith('360')?img+'.webp':img+'.webp'}" alt="" loading="lazy"><p>${t}</p></div>`;
 const link=l=>{const m=(l.note||'').match(/https?:\/\/\S+/);return m?`<a href="${esc(m[0])}" target="_blank" rel="noopener" style="color:var(--ac)">Ver oferta ↗</a> `:''};
+const PK=['name','title','email','phone','location','links','summary','skills','experience','education','languages','projects'];
+let cvNotes='',cvQs=[],offer={company:'',role:'',desc:''};
+const b64=f=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=()=>ko(new Error('No se pudo leer el archivo'));r.readAsDataURL(f)});
+async function parseInto(body){const r=await fetch('/api/cv/parse',{method:'POST',headers:J,body:JSON.stringify(body)}),j=await r.json();if(!r.ok)throw new Error(j.error||'Error del servidor');
+  const P=S.profile;for(const k of PK)if(j.profile[k])P[k]=j.profile[k];cvQs=arr(j.preguntas);save();busy='Perfil rellenado. Revisa y corrige los campos de abajo antes de crear el CV.'}
+const startCard=()=>`<div class="card"><b>Empieza aquí: tu perfil base</b><div class="mut">Sube tu CV o créalo desde cero. Después puedes corregir todo a mano.</div>
+<label>A) Subir mi CV actual (PDF, DOCX o TXT)</label><input type="file" id="cvfile" accept=".pdf,.docx,.txt,.md"><div class="row"><button id="cvup" ${wk()?'disabled':''}>Leer mi CV y rellenar el perfil</button></div>
+<label>B) Crear desde cero: cuéntame tu trayectoria con tus palabras (estudios, trabajos, proyectos, idiomas…)</label><textarea id="cvnotes" placeholder="Ej.: Estudié… trabajé 2 años en… hice una app que…">${esc(cvNotes)}</textarea><div class="row"><button id="cvscratch" ${wk()?'disabled':''}>Crear mi perfil con IA</button></div>
+${cvQs.length?`<div class="warn"><b>Para mejorar tu CV, añade:</b><br>${cvQs.map(q=>'• '+esc(q)).join('<br>')}</div>`:''}</div>`;
+const offerCard=()=>`<div class="card"><b>¿Una oferta que has encontrado tú?</b><div class="mut">Pégala aquí y se añade a tu lista para adaptar el CV. Si no, elige una de tus ofertas abajo.</div>
+<div class="row"><input id="ofco" value="${esc(offer.company)}" placeholder="Empresa" style="flex:1"><input id="ofro" value="${esc(offer.role)}" placeholder="Puesto" style="flex:1"></div>
+<textarea id="ofde" placeholder="Pega aquí el texto completo de la oferta">${esc(offer.desc)}</textarea><div class="row"><button id="ofuse">Usar esta oferta</button></div></div>`;
 function render(){
   const L=S.leads,ws=weekStart();
-  const wkMeet=S.meetings.filter(m=>new Date(m.when)>=ws).length;
-  $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wkMeet]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
+  const wm=S.meetings.filter(m=>new Date(m.when)>=ws).length;
+  $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wm]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
   $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}"><img class="ni" src="/assets/booker-brody/icons/${IC[k]}-96.webp" alt="">${n}</button>`).join('');
   document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;if(!wk())busy='';render()});
   const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn">${esc(busy)}</div>`:'');
@@ -128,7 +144,7 @@ function render(){
     <div class="row"><label><input type="checkbox" id="aon" ${S.auto.on?'checked':''} style="width:auto;margin:0"> Automático cada</label><input id="ah" type="number" value="${S.auto.hours}" style="width:70px"><span class="mut sp">horas · ${S.auto.last?'última: '+new Date(S.auto.last).toLocaleTimeString('es-ES'):'sin ejecutar'} ${esc(S.auto.msg||'')}</span><button id="arun" ${wk()?'disabled':''}>Ejecutar ahora</button></div>
     <label>Pega prospectos, uno por línea: Nombre, Cargo, Empresa, nota</label><textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea>
     <div class="row"><button id="add">Añadir leads</button><span class="sp"></span><button class="pri" id="go" ${wk()||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div></div>`+
-    L.map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div>${link(l)}<span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-cv="${l.id}">CV</button><button data-del="${l.id}">✕</button></div>`).join('');
+    leadsBar()+sortL().slice(0,lim).map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div>${link(l)}<span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-cv="${l.id}">CV</button><button data-del="${l.id}">✕</button></div>`).join('')+leadsMore();
   }
   if(tab==='approve'){
     const q=L.filter(l=>l.status==='drafted').sort((a,b)=>b.score-a.score);
@@ -149,11 +165,11 @@ function render(){
     const P=S.profile||{},F=[['name','Nombre completo'],['title','Titular'],['email','Correo'],['phone','Teléfono'],['location','Ciudad, país'],['links','Enlaces (portfolio, GitHub, LinkedIn)']];
     const T=[['summary','Sobre ti (2-3 frases, con tus palabras)'],['skills','Habilidades, separadas por comas'],['experience','Experiencia: puesto, empresa, fechas y qué lograste'],['projects','Proyectos: nombre, qué hace y con qué'],['education','Formación'],['languages','Idiomas y nivel']];
     const l=S.leads.find(x=>String(x.id)===String(cvLead)),c=l&&l.cv;
-    h+=`<div class="card"><b>Importar desde LinkedIn</b><div class="mut">En LinkedIn: Ajustes → Privacidad de los datos → Obtener una copia de tus datos → elige Posiciones, Educación, Habilidades, Idiomas y Perfil. Puede tardar de minutos a 24 horas. Descomprime el ZIP y selecciona aquí los CSV.</div><input type="file" id="lifiles" accept=".csv" multiple><div class="row"><button id="liimp">Importar mis datos</button></div></div>
+    h+=startCard()+`<div class="card"><b>Importar desde LinkedIn</b><div class="mut">En LinkedIn: Ajustes → Privacidad de los datos → Obtener una copia de tus datos → elige Posiciones, Educación, Habilidades, Idiomas y Perfil. Puede tardar de minutos a 24 horas. Descomprime el ZIP y selecciona aquí los CSV.</div><input type="file" id="lifiles" accept=".csv" multiple><div class="row"><button id="liimp">Importar mis datos</button></div></div>
     <div class="card"><b>Tu perfil</b><div class="mut">Solo se usa lo que escribas aquí. No se inventa nada: lo que falte, el CV lo marca.</div>`+F.map(([k,n])=>`<label>${n}</label><input data-p="${k}" value="${esc(P[k])}">`).join('')+T.map(([k,n])=>`<label>${n}</label><textarea data-p="${k}">${esc(P[k])}</textarea>`).join('')+`</div>`;
-    h+=`<div class="card"><label>Oferta para la que crear el CV</label><select id="cvsel"><option value="">Elige una oferta…</option>${S.leads.map(x=>`<option value="${x.id}" ${String(x.id)===String(cvLead)?'selected':''}>${esc(x.company)} · ${esc((x.role||'').replace('Contrata: ',''))}</option>`).join('')}</select>${l?link(l):''}<div class="row"><button class="pri" id="cvgen" ${wk()||!l||!P.name?'disabled':''}>Crear CV a medida</button>${!P.name?'<span class="mut">Escribe tu nombre primero.</span>':''}</div></div>`;
+    h+=offerCard()+`<div class="card"><label>Oferta para la que crear el CV</label><select id="cvsel"><option value="">Elige una oferta…</option>${cvOpts().map(x=>`<option value="${x.id}" ${String(x.id)===String(cvLead)?'selected':''}>${esc(x.company)} · ${esc((x.role||'').replace('Contrata: ',''))}</option>`).join('')}</select>${l?link(l):''}<div class="row"><button class="pri" id="cvgen" ${wk()||!l||!P.name?'disabled':''}>Crear CV a medida</button>${!P.name?'<span class="mut">Escribe tu nombre primero.</span>':''}</div></div>`;
     if(c){
-      h+=`<div class="card"><b>Encaje con la oferta</b><div class="mut">Cubre: ${esc(arr(c.cubre).join(', ')||'sin datos')}</div><div class="mut">Falta o no consta en tu perfil: ${esc(arr(c.faltan).join(', ')||'nada')}</div></div>
+      h+=`<div class="card"><b>Encaje con la oferta${c.encaje?': '+esc(c.encaje)+'/100':''}</b>${c.aviso?'<div class="warn">'+esc(c.aviso)+'</div>':''}<div class="mut">Palabras clave de la oferta incluidas: ${esc(arr(c.palabras_clave).join(', ')||'ninguna')}</div><div class="mut">Cubre: ${esc(arr(c.cubre).join(', ')||'sin datos')}</div><div class="mut">Falta o no consta en tu perfil: ${esc(arr(c.faltan).join(', ')||'nada')}</div></div>
       <div class="card"><b>${esc(P.name)}</b> <span class="mut">${esc(c.titular||'')}</span><label>Resumen</label><textarea data-cvf="resumen">${esc(c.resumen)}</textarea><p><b>Habilidades</b> ${esc(arr(c.habilidades).join(' · '))}</p>
       ${arr(c.experiencia).map(e=>`<p><b>${esc(e.puesto||e)}</b> ${esc(e.empresa)} <span class="mut">${esc(e.fechas)}</span><br>${arr(e.logros).map(x=>'• '+esc(x)).join('<br>')}</p>`).join('')}
       ${arr(c.proyectos).map(p=>`<p><b>${esc(p.nombre||p)}</b> <span class="mut">${esc(p.tecnologias)}</span><br>${esc(p.descripcion)}</p>`).join('')}</div>
@@ -176,6 +192,8 @@ function bind(){
   if(g('#me')){g('#me').oninput=e=>{S.me=e.target.value;save()};g('#icp').oninput=e=>{S.icp=e.target.value;save()};g('#av').oninput=e=>{S.avail=e.target.value;save()};
     g('#add').onclick=()=>{const t=g('#new').value;if(!t.trim())return;S.leads.push(...parseLeads(t));save();render()};
     g('#go').onclick=scoreAll;
+    if(g('#more'))g('#more').onclick=()=>{lim+=50;render()};
+    if(g('#clr'))g('#clr').onclick=async()=>{if(!confirm('¿Borrar los leads que aún no se han puntuado? Los demás se conservan.'))return;try{await fetch('/api/leads/clear',{method:'POST'})}catch(e){}await pull(true)};
     const A=S.auto;g('#fr').value=A.region;g('#fs').value=A.seniority;
     for(const [id,k] of [['#fq','q'],['#fr','region'],['#fs','seniority'],['#fd','days']])g(id).oninput=g(id).onchange=e=>{A[k]=e.target.value;save()};
     g('#week').onclick=()=>{g('#fd').value=7;A.days=7;save();g('#find').click()};
@@ -197,10 +215,24 @@ function bind(){
   on('[data-cv]',b=>b.onclick=()=>{cvLead=b.dataset.cv;tab='cv';render()});
   on('[data-p]',t=>t.oninput=()=>{S.profile[t.dataset.p]=t.value;save()});
   on('[data-cvf]',t=>t.oninput=()=>{f(cvLead).cv[t.dataset.cvf]=t.value;save()});
+  if(g('#cvfile')){
+    g('#cvnotes').oninput=e=>{cvNotes=e.target.value};
+    for(const [id,k] of [['#ofco','company'],['#ofro','role'],['#ofde','desc']])g(id).oninput=e=>{offer[k]=e.target.value};
+    g('#ofuse').onclick=()=>{if(!offer.company.trim()||offer.desc.trim().length<40){busy='Escribe la empresa y pega el texto de la oferta.';render();return}
+      const l={id:Date.now()+Math.random(),status:'manual',name:offer.company.trim(),role:'Contrata: '+(offer.role.trim()||'Puesto'),company:offer.company.trim(),desc:offer.desc.trim().slice(0,6000),note:''};
+      S.leads.push(l);cvLead=l.id;offer={company:'',role:'',desc:''};save();busy='Oferta añadida y seleccionada.';render()};
+    g('#cvup').onclick=async()=>{const f=g('#cvfile').files[0];if(!f){busy='Selecciona primero un archivo.';render();return}
+      if(f.size>8e6){busy='El archivo pesa demasiado (máx. 8 MB).';render();return}
+      busy='Leyendo tu CV… puede tardar';render();
+      try{await parseInto({name:f.name,data:await b64(f)})}catch(e){busy='Error: '+e.message}render()};
+    g('#cvscratch').onclick=async()=>{if(cvNotes.trim().length<30){busy='Cuéntame un poco más (unas líneas).';render();return}
+      busy='Creando tu perfil… puede tardar';render();
+      try{await parseInto({text:cvNotes,mode:'notes'})}catch(e){busy='Error: '+e.message}render()};
+  }
   if(g('#cvsel')){
     g('#cvsel').onchange=e=>{cvLead=e.target.value;render()};
     g('#cvgen').onclick=async()=>{const l=f(cvLead);busy='Creando el CV a medida… puede tardar un minuto';render();
-      try{const r=await fetch('/api/cv/generate',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,lead:{role:l.role,company:l.company,note:l.note,desc:l.desc}})});const j=await r.json();if(!r.ok)throw new Error(j.error);l.cv=j.cv;save();busy=''}catch(e){busy='Error: '+e.message}render()};
+      try{const r=await fetch('/api/cv/generate',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,lead:{id:l.id,role:l.role,company:l.company,note:l.note,desc:l.desc}})});const j=await r.json();if(!r.ok)throw new Error(j.error);l.cv=j.cv;save();busy=''}catch(e){busy='Error: '+e.message}render()};
     if(g('#cvpdf')){
       g('#cvpdf').onclick=async()=>{const l=f(cvLead);try{const r=await fetch('/api/cv/pdf',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,cv:l.cv})});if(!r.ok)throw new Error((await r.json()).error);const a=document.createElement('a');a.href=URL.createObjectURL(await r.blob());a.download=`CV-${S.profile.name||'candidato'}-${l.company}.pdf`.replace(/\s+/g,'-');a.click()}catch(e){busy='Error: '+e.message;render()}};
       g('#cvsend').onclick=async()=>{const l=f(cvLead),to=g('#cvto').value.trim();l.to=to;save();
