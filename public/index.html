@@ -186,13 +186,19 @@ const nextHint=()=>{const L=S.leads;
   return 'Aquí ves tus entrevistas y reuniones. Puedes llevarlas a tu calendario con el archivo .ics.'};
 const guideHtml=()=>(tab==='cv'?stepsCv():`<div class="guide" role="note"><b>Siguiente paso:</b> ${nextHint()}</div>`)+`<details class="help"><summary>¿Qué significan estas palabras?</summary><p><b>Lead</b>: una empresa a la que podrías escribir.</p><p><b>Encaje</b>: de 0 a 100, cuánto se parece esa empresa a lo que ofreces.</p><p><b>ATS</b>: el programa que filtra CV en muchas empresas; busca las palabras clave de la oferta.</p><p><b>CV a medida</b>: tu CV reordenado para cada oferta. Solo usa lo que tú has escrito: no inventa nada.</p></details>`;
 let flash=false,cvLead='',slide=0;const working=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
+/* archivo del CV: se recuerda y se muestra aunque la página se repinte */
+let cvFileName='',cvFileSt='';try{cvFileName=localStorage.getItem('bb_cvfile')||'';cvFileSt=cvFileName?'ok':''}catch(e){}
+/* contador de espera: que se vea que la IA sigue trabajando */
+let _bs=0,_bl='';setInterval(()=>{const el=document.querySelector('#view .warn[role="status"]');if(!el||!working()){_bs=0;_bl='';return}
+  if(busy!==_bl){_bl=busy;_bs=Date.now()}const s=Math.floor((Date.now()-_bs)/1000);
+  el.textContent=busy+' · '+s+' s'+(s>=60?' · el modelo local tarda al cargar, no cierres esta página':'')},1000);
 const PK=['name','title','email','phone','location','links','summary','skills','experience','education','languages','projects'];
 let cvNotes='',cvQs=[];
 const b64=f=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]||'');r.onerror=()=>ko(new Error('No se pudo leer el archivo'));r.readAsDataURL(f)});
 async function parseInto(body){const r=await fetch('/api/cv/parse',{method:'POST',headers:J,body:JSON.stringify(body)}),j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Error del servidor');
   const P=S.profile;for(const k of PK)if(j.profile&&j.profile[k])P[k]=j.profile[k];cvQs=arr(j.preguntas);save();busy='Perfil rellenado. Revisa y corrige los campos de abajo antes de crear el CV.'}
 const startCard=()=>`<div class="card"><b>Paso 1 · Crea tu perfil base</b><div class="mut">Sube tu CV o créalo desde cero. Después puedes corregir todo a mano.</div>
-<label for="cvfile">A) Subir mi CV actual (PDF con texto, DOCX o TXT)</label><input type="file" id="cvfile" accept=".pdf,.docx,.txt,.md"><div class="row"><button id="cvup" ${working()?'disabled':''}>Leer mi CV y rellenar el perfil</button></div>
+<label for="cvfile">A) Subir mi CV actual (PDF con texto, DOCX o TXT)</label><input type="file" id="cvfile" accept=".pdf,.docx,.txt,.md">${cvFileName?'<div class="mut" id="cvfname">📄 Archivo: <b>'+esc(cvFileName)+'</b>'+(cvFileSt==='ok'?' · leído ✓':cvFileSt==='err'?' · no se pudo leer':' · leyendo…')+'</div>':''}<div class="row"><button id="cvup" ${working()?'disabled':''}>Leer mi CV y rellenar el perfil</button></div>
 <label for="cvnotes">B) Crear desde cero: cuenta tu trayectoria con tus palabras (estudios, trabajos, proyectos, idiomas…)</label><textarea id="cvnotes" placeholder="Ej.: Estudié… trabajé 2 años en… hice una app que…">${esc(cvNotes)}</textarea><div class="row"><button id="cvscratch" ${working()?'disabled':''}>Crear mi perfil con IA</button></div>
 ${cvQs.length?`<div class="warn" role="note"><b>Para mejorar tu CV, añade:</b><br>${cvQs.map(q=>'• '+esc(q)).join('<br>')}</div>`:''}</div>`;
 const empty=(t,img='booker-principal-160')=>`<div class="card empty"><img src="${M}${img.endsWith('360')?img+'.webp':img+'.webp'}" alt="" loading="lazy"><p>${t}</p></div>`;
@@ -326,8 +332,8 @@ function bind(){
     g('#cvnotes').oninput=e=>{cvNotes=e.target.value};
     g('#cvup').onclick=async()=>{const fl=g('#cvfile').files[0];if(!fl){busy='Selecciona primero un archivo.';render();return}
       if(fl.size>8e6){busy='El archivo pesa demasiado (máximo 8 MB).';render();return}
-      busy='Leyendo tu CV… puede tardar';render();
-      try{await parseInto({name:fl.name,data:await b64(fl)})}catch(e){busy='Error: '+e.message}render()};
+      cvFileName=fl.name;cvFileSt='leyendo';busy='Leyendo tu CV… puede tardar';render();
+      try{await parseInto({name:fl.name,data:await b64(fl)});cvFileName=fl.name;cvFileSt='ok';try{localStorage.setItem('bb_cvfile',fl.name)}catch(e){}}catch(e){cvFileSt='err';busy='Error: '+e.message}render()};
     g('#cvscratch').onclick=async()=>{if(cvNotes.trim().length<30){busy='Cuéntame un poco más (unas líneas).';render();return}
       busy='Creando tu perfil… puede tardar';render();
       try{await parseInto({text:cvNotes,mode:'notes'})}catch(e){busy='Error: '+e.message}render()};

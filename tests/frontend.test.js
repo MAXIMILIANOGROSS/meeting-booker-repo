@@ -115,7 +115,7 @@ test('CV para cualquier oferta: pegar el texto, crear el CV y ver la compatibili
 test('mi CV: crear el perfil desde cero y desde un archivo subido', skip, async () => {
   tab('cv'); await until(() => $('#cvscratch'), 'tarjeta del paso 1');
   type($('[data-p="name"]'), ''); type($('[data-p="skills"]'), '');
-  type($('#cvnotes'), 'Estudié informática en Madrid y trabajé dos años en Acme haciendo interfaces con React.');
+  type($('#cvnotes'), 'Me llamo Eva Prueba. Estudié informática en Madrid y trabajé dos años en Acme haciendo interfaces con React.');
   click($('#cvscratch')); await until(() => $('[data-p="name"]').value === 'Eva Prueba', 'perfil creado desde cero', 6000);
   assert.equal($('[data-p="skills"]').value, 'React, CSS'); assert.match($('#view').textContent, /Para mejorar tu CV, añade/);
   type($('[data-p="name"]'), ''); click($('#cvup')); await until(() => /Selecciona primero un archivo/.test($('.warn[role="status"]')?.textContent || ''), 'aviso sin archivo');
