@@ -57,6 +57,28 @@ main{position:relative;z-index:1}
 .foot{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap;margin:22px 0 8px;background:rgba(255,249,236,.92);border-radius:var(--r-l);padding:12px 16px;box-shadow:var(--sh)}.foot img{height:84px;width:auto;max-width:100%}
 .peek{position:fixed;left:0;bottom:0;width:170px;height:auto;pointer-events:none;z-index:0}
 @media(max-width:1100px){.peek{display:none}}
+</style><style id="tech">
+:root:root:root{color-scheme:dark;--bg:#0a1a2c;--fg:#eaf4f8;--card:rgba(11,31,54,.78);--mut:#a9bfcd;--bd:rgba(72,197,201,.32);--ac:#FFB43B;--ok:#48C5C9;--glow:0 0 0 1px rgba(72,197,201,.16),0 10px 34px rgba(0,0,0,.35),0 0 22px rgba(72,197,201,.09)}
+html body{background:linear-gradient(180deg,rgba(5,14,26,.80),rgba(5,14,26,.58)),url(/assets/booker-brody/backgrounds/marte-1600.webp) center/cover fixed #0a1a2c}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(rgba(72,197,201,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(72,197,201,.055) 1px,transparent 1px);background-size:38px 38px;-webkit-mask-image:linear-gradient(#000,transparent 88%);mask-image:linear-gradient(#000,transparent 88%)}
+.card,.st,.warn,.brand,.foot,.guide,.steps li,#view>.mut{background:var(--card)!important;-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--bd);box-shadow:var(--glow);color:var(--fg)}
+.brand{border-top:2px solid var(--teal)}.brand .sub,.mut,label{color:var(--mut)}
+h1{background:linear-gradient(90deg,#fff,var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+button{background:rgba(255,255,255,.06);color:var(--fg);border:1px solid var(--bd)}button:hover:not(:disabled){border-color:var(--teal);box-shadow:0 0 14px rgba(72,197,201,.3)}
+button.on,button.pri{background:var(--amber);color:#102B49;border-color:var(--amber);font-weight:800;box-shadow:0 0 18px rgba(255,180,59,.35)}
+input,textarea,select{background:rgba(255,255,255,.06);color:var(--fg);border:1px solid var(--bd)}option{background:#0b1f36;color:#eaf4f8}
+.st b,.score{font-family:ui-monospace,"SF Mono",Menlo,monospace;color:var(--amber);text-shadow:0 0 14px rgba(255,180,59,.45)}
+a{color:var(--teal)}.tag{border-color:var(--teal);color:var(--teal)}
+.steps{display:flex;gap:8px;list-style:none;padding:0;margin:0 0 8px;flex-wrap:wrap}.steps li{flex:1;min-width:130px;padding:8px 10px;border-radius:12px;color:var(--mut);font-size:13px}
+.steps b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.12);margin-right:6px;font-family:ui-monospace,Menlo,monospace}
+.steps li.done{color:var(--fg);border-color:var(--ok)}.steps li.done b{background:var(--ok);color:#06212a}
+.steps li.cur{color:var(--fg);border-color:var(--amber)!important;box-shadow:0 0 18px rgba(255,180,59,.32)}.steps li.cur b{background:var(--amber);color:#102B49}
+.guide{padding:10px 14px;border-radius:12px;margin-bottom:12px;border-left:4px solid var(--amber)}
+.help{margin-bottom:12px;color:var(--mut);font-size:13px}.help summary{cursor:pointer;color:var(--teal)}.help p{margin:6px 0}
+.seg{display:flex;gap:6px;margin:10px 0}.seg button{flex:1}
+.meter{height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden;margin:8px 0}.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--amber))}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.chip{font:12px ui-monospace,Menlo,monospace;padding:2px 9px;border-radius:99px;border:1px solid}.chip.ok{color:var(--teal);border-color:var(--teal)}.chip.no{color:var(--coral);border-color:var(--coral)}
+#view[data-om="paste"] #cvsel,#view[data-om="link"] #cvsel{display:none}
 </style>
 <style>
 /* Carrusel guiado */
@@ -69,18 +91,20 @@ main{position:relative;z-index:1}
 .sl textarea{min-height:130px;font-size:17px}.sl input,.sl select{font-size:17px}
 .why,.tip{border-radius:var(--r-s);padding:10px 12px;margin-bottom:10px;font-size:14px}.why{background:rgba(72,197,201,.16);border-left:4px solid var(--teal)}.tip{background:rgba(255,180,59,.2);border-left:4px solid var(--amber)}
 .exs{display:flex;flex-direction:column;gap:6px}.lbl{font-size:12px;color:var(--mut)}
-.chip{text-align:left;white-space:normal;border-radius:var(--r-m);font-size:14px;padding:8px 12px;border-style:dashed}
+.exchip{text-align:left;white-space:normal;border-radius:var(--r-m);font-size:14px;padding:8px 12px;border-style:dashed}
 .chk{display:flex;gap:8px;align-items:center;font-size:16px;color:var(--fg)}.chk input{width:auto;margin:0}
-.chk2{display:block;width:100%;text-align:left;margin-bottom:6px}.chk2.ok{border-color:var(--ok)}.steps{margin:12px 0;font-size:14px;line-height:1.8}
+.chk2{display:block;width:100%;text-align:left;margin-bottom:6px}.chk2.ok{border-color:var(--ok)}.wzsteps{margin:12px 0;font-size:14px;line-height:1.8}
 .carnav{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,249,236,.94);border-radius:0 0 var(--r-m) var(--r-m);padding:10px 12px}
 .dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.dot{width:12px;height:12px;padding:0;border-radius:50%;border:2px solid var(--navy);background:transparent}.dot.done{background:rgba(16,43,73,.35)}.dot.on{background:var(--amber);border-color:var(--navy);transform:scale(1.25)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .carhead,:root:not([data-theme="light"]) .progress,:root:not([data-theme="light"]) .carnav{background:rgba(16,43,73,.94)}:root:not([data-theme="light"]) .dot{border-color:var(--cream)}}
 @media(max-width:520px){.sl{padding:16px}.sl h3{font-size:20px}#cprev,#cnext{padding:8px 10px}}
-</style></head><body><main>
+</style>
+</head><body><main>
 <header class="brand"><img src="/assets/booker-brody/mascot/booker-principal-160.webp" alt="" width="64" height="78"><div><h1>Booker Brody</h1>
 <div class="sub">Encuentra empresas, redacta el mensaje y agenda la reunión. Tú apruebas y envías.</div></div></header>
+<div id="net" class="warn" role="alert" hidden>⚠ No se pudo hablar con el servidor local. Tus últimos cambios pueden no estar guardados. ¿Sigue en marcha <code>npm start</code>?</div>
 <div class="stats" id="stats"></div>
-<nav id="nav"></nav>
+<nav id="nav" role="tablist" aria-label="Secciones"></nav>
 <div id="view"></div>
 <footer class="foot"><img src="/assets/booker-brody/mascot/booker-vistas-640.webp" alt="" loading="lazy"><img src="/assets/booker-brody/mascot/booker-libreta-320.webp" alt="" loading="lazy"></footer>
 </main>
@@ -91,13 +115,31 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const def=()=>({icp:'',me:'',avail:'',leads:[],meetings:[],profile:{},auto:{on:false,hours:6,q:'react OR frontend',region:'eu,uk',seniority:'',days:14,last:0,msg:''}});
 function load(){try{return Object.assign(def(),JSON.parse(localStorage.getItem('amb')||'null')||{})}catch(e){return def()}}
 let S=def(),tab='leads',busy='',sample=true,sampleOk=true,dirty=false,rev=0;
-let st=null;const save=()=>{dirty=true;clearTimeout(st);st=setTimeout(async()=>{try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:S,rev})});const j=await r.json();if(r.status===409)await pull(true);else{rev=j.rev;dirty=false}}catch(e){}},800)};
-async function pull(force){try{if(!force){const q=await(await fetch('/api/rev')).json();if(dirty||q.rev===rev)return}const j=await(await fetch('/api/state')).json();if(force||(!dirty&&j.rev!==rev)){S=Object.assign(def(),j.state);rev=j.rev;dirty=false;const a=document.activeElement;if(force||!a||!/INPUT|TEXTAREA|SELECT/.test(a.tagName))render()}}catch(e){}}
-setInterval(()=>pull(false),15000);pull(true);
+const RANK={new:0,drafted:1,sent:2,discarded:2,replied:3,booked:4,lost:4};
+function mergeConflict(local,server){const m=Object.assign(def(),server),la=local.auto||{},sa=server.auto||{};
+  m.me=local.me;m.icp=local.icp;m.avail=local.avail;m.profile=local.profile;
+  m.auto=Object.assign({},sa,{on:la.on,hours:la.hours,q:la.q,region:la.region,seniority:la.seniority,days:la.days});
+  const loc=new Map(arr(local.leads).map(l=>[String(l.id),l])),seen=new Set();
+  m.leads=arr(server.leads).map(sl=>{const k=String(sl.id),ll=loc.get(k);seen.add(k);return ll&&(RANK[ll.status]||0)>=(RANK[sl.status]||0)?ll:sl});
+  arr(local.leads).forEach(l=>{if(!seen.has(String(l.id)))m.leads.push(l)});
+  const mk=x=>x.when+'|'+x.name,have=new Set(arr(server.meetings).map(mk));m.meetings=arr(server.meetings).concat(arr(local.meetings).filter(x=>!have.has(mk(x))));
+  return m}
+let st=null;const net=ok=>{const n=$('#net');if(n)n.hidden=ok};
+async function putState(){const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:S,rev})});const j=await r.json();
+  if(r.status===409&&j.state){S=mergeConflict(S,j.state);rev=j.rev;const a=document.activeElement;if(!a||!/INPUT|TEXTAREA|SELECT/.test(a.tagName))render();return putState()}
+  if(r.status===409){await pull(true);return}
+  if(!r.ok)throw new Error(j.error||'Error al guardar');rev=j.rev;dirty=false}
+const save=()=>{dirty=true;clearTimeout(st);st=setTimeout(async()=>{try{await putState();net(true)}catch(e){net(false)}},400)};
+const flush=async()=>{clearTimeout(st);if(dirty){try{await putState();net(true)}catch(e){net(false)}}};
+async function pull(force){let j;try{j=await(await fetch('/api/state')).json();net(true)}catch(e){net(false);return}
+  if(force||(!dirty&&j.rev!==rev)){S=Object.assign(def(),j.state);rev=j.rev;dirty=false;const a=document.activeElement;if(force||!a||!/INPUT|TEXTAREA|SELECT/.test(a.tagName))render()}}
+setInterval(()=>pull(false),15000);
 sample=true;sampleOk=true;
+const ST={new:'nuevo',drafted:'borrador',sent:'enviado',replied:'respondió',booked:'agendado',lost:'cerrado',discarded:'descartado'};
 const TABS=[['leads','1 · Leads'],['approve','2 · Aprobar'],['replies','3 · Respuestas'],['meets','4 · Reuniones'],['cv','5 · Mi CV']];
 const weekStart=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d};
-async function ask(prompt){const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Error del servidor');return JSON.parse(j.text.replace(/```json|```/g,'').trim())}
+function jparse(t){t=String(t).replace(/```json|```/g,'').trim();try{return JSON.parse(t)}catch(e){const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a>=0&&b>a)return JSON.parse(t.slice(a,b+1));throw new Error('La IA no devolvió un JSON válido. Inténtalo de nuevo.')}}
+async function ask(prompt){const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Error del servidor');return jparse(j.text)}
 function parseLeads(t){return t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const p=l.split(/[,|;]/).map(x=>x.trim());return{id:Date.now()+Math.random(),name:p[0]||'',role:p[1]||'',company:p[2]||'',note:p.slice(3).join(', '),status:'new'}})}
 async function scoreAll(){
   const todo=S.leads.filter(l=>l.status==='new');
@@ -113,6 +155,10 @@ async function analyze(id){
   busy='';render()}
 const IC={leads:'remolino',approve:'check',replies:'reloj',meets:'calendario',cv:'estrella'},SC={leads:'portal',approve:'oficina',replies:'escribiendo'};
 const banner=t=>SC[t]?`<img class="ban" src="/assets/booker-brody/scenes/${SC[t]}.webp" alt="" loading="lazy">`:'';
+function ics(ms){const z=n=>String(n).padStart(2,'0'),f=d=>`${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}T${z(d.getHours())}${z(d.getMinutes())}00`,e2=t=>String(t||'').replace(/[\\;,]/g,'\\$&').replace(/\n/g,'\\n'),stamp=new Date().toISOString().replace(/[-:]|\.\d{3}/g,'');
+  const o=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Booker Brody//ES','CALSCALE:GREGORIAN'];
+  ms.forEach((m,i)=>{const s=new Date(m.when);if(isNaN(s))return;o.push('BEGIN:VEVENT',`UID:${s.getTime()}-${i}@booker-brody`,`DTSTAMP:${stamp}`,`DTSTART:${f(s)}`,`DTEND:${f(new Date(s.getTime()+30*60000))}`,`SUMMARY:${e2('Reunión con '+m.name+(m.company?' ('+m.company+')':''))}`,'END:VEVENT')});
+  o.push('END:VCALENDAR');return o.join('\r\n')}
 function csv(t){const r=[];let row=[],f='',q=false;t=t.replace(/^\uFEFF/,'');for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}else if(c=='"')q=true;else if(c==','){row.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;row.push(f);f='';if(row.some(x=>x))r.push(row);row=[]}else f+=c}if(f||row.length){row.push(f);if(row.some(x=>x))r.push(row)}return r}
 function rows(t){const a=csv(t);while(a.length&&a[0].filter(Boolean).length<2)a.shift();if(!a.length)return[];const k=a.shift().map(x=>x.trim().toLowerCase());return a.map(r=>Object.fromEntries(k.map((n,i)=>[n,(r[i]||'').trim()])))}
 const pick=(r,...n)=>{for(const k of n)if(r[k])return r[k];return''};
@@ -127,27 +173,32 @@ async function importLinkedIn(files){
     else if(nm.startsWith('profile')){const r=R[0]||{};if(!P.name)P.name=(pick(r,'first name')+' '+pick(r,'last name')).trim();if(!P.title&&pick(r,'headline'))P.title=pick(r,'headline');if(!P.summary&&pick(r,'summary'))P.summary=pick(r,'summary');if(!P.location&&pick(r,'geo location','address'))P.location=pick(r,'geo location','address');n.perfil=1}
     else ign.push(f.name)}
   save();return Object.entries(n).map(([k,v])=>`${v} ${k}`).join(', ')+(ign.length?` · No reconocidos: ${ign.join(', ')}`:'')}
-let lim=30;const sortL=()=>[...S.leads].sort((a,b)=>(b.score??-1)-(a.score??-1));
-const cvOpts=()=>{const t=sortL().slice(0,150),s=S.leads.find(x=>String(x.id)===String(cvLead));return s&&!t.includes(s)?[s,...t]:t};
-const leadsBar=()=>{const N=S.leads.length,n=S.leads.filter(l=>l.status==='new').length;return N?`<div class="card row"><span class="sp mut">Mostrando ${Math.min(lim,N)} de ${N} leads, ordenados por encaje</span>${n?`<button id="clr">Borrar los no procesados (${n})</button>`:''}</div>`:''};
-const leadsMore=()=>S.leads.length>lim?`<div class="row"><button id="more">Mostrar más (${S.leads.length-lim})</button></div>`:'';
-let flash=false,cvLead='',slide=0;const wk=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
+let offerMode='list',draftOffer={title:'',company:'',text:'',url:''};
+const atsBox=c=>c.ats?`<div class="card ats"><b>Compatibilidad de palabras clave: <span class="score">${c.ats.score}%</span></b><div class="meter"><i style="width:${c.ats.score}%"></i></div><div class="mut">Los filtros automáticos de empleo (ATS) buscan en tu CV las palabras clave de la oferta. Comprobamos las 25 más repetidas.</div><div class="chips">${arr(c.ats.found).map(x=>`<span class="chip ok">${esc(x)}</span>`).join('')}${arr(c.ats.missing).map(x=>`<span class="chip no">${esc(x)}</span>`).join('')}</div><div class="mut">Verde: ya aparece. Rojo: no aparece; añádela a tu perfil solo si es verdad.</div></div>`:'';
+const offerPicker=()=>{const D=draftOffer;return `<div class="card"><b>Paso 2 · Elige la oferta</b><div class="mut">Sirve cualquier oferta publicada en internet: elige una de tu lista, pega su texto o usa su enlace.</div><div class="seg" role="group" aria-label="Origen de la oferta">${[['list','De mi lista'],['paste','Pegar texto'],['link','Desde un enlace']].map(([k,n])=>`<button class="${offerMode===k?'on':''}" data-om="${k}">${n}</button>`).join('')}</div>`+(offerMode==='link'?`<label>Enlace de la oferta</label><input id="ourl" placeholder="https://..." value="${esc(D.url)}"><div class="row"><button id="ofetch" ${working()?'disabled':''}>Leer la oferta</button></div><div class="mut">Si la web pide iniciar sesión (LinkedIn, por ejemplo), usa «Pegar texto».</div>`:offerMode==='paste'?`<label>Puesto</label><input id="otitle" value="${esc(D.title)}"><label>Empresa</label><input id="ocomp" value="${esc(D.company)}"><label>Texto de la oferta (cópialo entero desde la web)</label><textarea id="otext" style="min-height:140px">${esc(D.text)}</textarea><div class="row"><button id="ouse">Usar esta oferta</button></div>`:'')+`</div>`};
+const stepsCv=()=>{const P=S.profile||{},l=S.leads.find(x=>String(x.id)===String(cvLead)),ok=P.name&&P.email&&(P.skills||P.experience||P.projects),s=[['Tu perfil',!!ok],['La oferta',!!l],['CV a medida',!!(l&&l.cv)],['Enviar o descargar',!!(l&&l.cvSent)]],cur=s.findIndex(x=>!x[1]);
+  const T=['Rellena tu nombre, tu correo y al menos tus habilidades o proyectos. Sube tu CV, créalo desde cero o impórtalo desde LinkedIn.','Elige la oferta a la que quieres aplicar: de tu lista, pegando su texto o con su enlace.','Pulsa «Crear CV a medida». Tarda unos segundos.','Revisa el CV, descárgalo en PDF o envíalo por correo.','Hecho. Elige otra oferta y repite: cada CV se adapta a la suya.'];
+  return `<ol class="steps" aria-label="Tu ruta">${s.map(([n,d],i)=>`<li class="${d?'done':i===cur?'cur':''}"><b>${d?'✓':i+1}</b>${n}</li>`).join('')}</ol><div class="guide" role="note"><b>Siguiente paso:</b> ${T[cur<0?4:cur]}</div>`};
+const nextHint=()=>{const L=S.leads;
+  if(tab==='leads')return L.length?(L.some(l=>l.status==='new')?'Tienes empresas sin puntuar. Rellena «Qué ofreces» y «Cliente ideal» y pulsa «Puntuar y redactar».':'Pasa a «Aprobar» para revisar los mensajes.'):'Empieza aquí: pulsa «Buscar» para traer empresas que están contratando ahora.';
+  if(tab==='approve')return L.some(l=>l.status==='drafted')?'Lee cada mensaje, edítalo si quieres y pulsa «Copiar y marcar enviado». Tú lo pegas en LinkedIn o en el correo.':'Aún no hay borradores. Ve a «Leads» y pulsa «Puntuar y redactar».';
+  if(tab==='replies')return 'Cuando una empresa conteste, pega aquí su respuesta. La IA te dice si hay interés y qué contestar.';
+  return 'Aquí ves tus entrevistas y reuniones. Puedes llevarlas a tu calendario con el archivo .ics.'};
+const guideHtml=()=>(tab==='cv'?stepsCv():`<div class="guide" role="note"><b>Siguiente paso:</b> ${nextHint()}</div>`)+`<details class="help"><summary>¿Qué significan estas palabras?</summary><p><b>Lead</b>: una empresa a la que podrías escribir.</p><p><b>Encaje</b>: de 0 a 100, cuánto se parece esa empresa a lo que ofreces.</p><p><b>ATS</b>: el programa que filtra CV en muchas empresas; busca las palabras clave de la oferta.</p><p><b>CV a medida</b>: tu CV reordenado para cada oferta. Solo usa lo que tú has escrito: no inventa nada.</p></details>`;
+let flash=false,cvLead='',slide=0;const working=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
+const PK=['name','title','email','phone','location','links','summary','skills','experience','education','languages','projects'];
+let cvNotes='',cvQs=[];
+const b64=f=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]||'');r.onerror=()=>ko(new Error('No se pudo leer el archivo'));r.readAsDataURL(f)});
+async function parseInto(body){const r=await fetch('/api/cv/parse',{method:'POST',headers:J,body:JSON.stringify(body)}),j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'Error del servidor');
+  const P=S.profile;for(const k of PK)if(j.profile&&j.profile[k])P[k]=j.profile[k];cvQs=arr(j.preguntas);save();busy='Perfil rellenado. Revisa y corrige los campos de abajo antes de crear el CV.'}
+const startCard=()=>`<div class="card"><b>Paso 1 · Crea tu perfil base</b><div class="mut">Sube tu CV o créalo desde cero. Después puedes corregir todo a mano.</div>
+<label for="cvfile">A) Subir mi CV actual (PDF con texto, DOCX o TXT)</label><input type="file" id="cvfile" accept=".pdf,.docx,.txt,.md"><div class="row"><button id="cvup" ${working()?'disabled':''}>Leer mi CV y rellenar el perfil</button></div>
+<label for="cvnotes">B) Crear desde cero: cuenta tu trayectoria con tus palabras (estudios, trabajos, proyectos, idiomas…)</label><textarea id="cvnotes" placeholder="Ej.: Estudié… trabajé 2 años en… hice una app que…">${esc(cvNotes)}</textarea><div class="row"><button id="cvscratch" ${working()?'disabled':''}>Crear mi perfil con IA</button></div>
+${cvQs.length?`<div class="warn" role="note"><b>Para mejorar tu CV, añade:</b><br>${cvQs.map(q=>'• '+esc(q)).join('<br>')}</div>`:''}</div>`;
 const empty=(t,img='booker-principal-160')=>`<div class="card empty"><img src="${M}${img.endsWith('360')?img+'.webp':img+'.webp'}" alt="" loading="lazy"><p>${t}</p></div>`;
 const link=l=>{const m=(l.note||'').match(/https?:\/\/\S+/);return m?`<a href="${esc(m[0])}" target="_blank" rel="noopener" style="color:var(--ac)">Ver oferta ↗</a> `:''};
-const PK=['name','title','email','phone','location','links','summary','skills','experience','education','languages','projects'];
-let cvNotes='',cvQs=[],offer={company:'',role:'',desc:''};
-const b64=f=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=()=>ko(new Error('No se pudo leer el archivo'));r.readAsDataURL(f)});
-async function parseInto(body){const r=await fetch('/api/cv/parse',{method:'POST',headers:J,body:JSON.stringify(body)}),j=await r.json();if(!r.ok)throw new Error(j.error||'Error del servidor');
-  const P=S.profile;for(const k of PK)if(j.profile[k])P[k]=j.profile[k];cvQs=arr(j.preguntas);save();busy='Perfil rellenado. Revisa y corrige los campos de abajo antes de crear el CV.'}
-const startCard=()=>`<div class="card"><b>Empieza aquí: tu perfil base</b><div class="mut">Sube tu CV o créalo desde cero. Después puedes corregir todo a mano.</div>
-<label>A) Subir mi CV actual (PDF, DOCX o TXT)</label><input type="file" id="cvfile" accept=".pdf,.docx,.txt,.md"><div class="row"><button id="cvup" ${wk()?'disabled':''}>Leer mi CV y rellenar el perfil</button></div>
-<label>B) Crear desde cero: cuéntame tu trayectoria con tus palabras (estudios, trabajos, proyectos, idiomas…)</label><textarea id="cvnotes" placeholder="Ej.: Estudié… trabajé 2 años en… hice una app que…">${esc(cvNotes)}</textarea><div class="row"><button id="cvscratch" ${wk()?'disabled':''}>Crear mi perfil con IA</button></div>
-${cvQs.length?`<div class="warn"><b>Para mejorar tu CV, añade:</b><br>${cvQs.map(q=>'• '+esc(q)).join('<br>')}</div>`:''}</div>`;
-const offerCard=()=>`<div class="card"><b>¿Una oferta que has encontrado tú?</b><div class="mut">Pégala aquí y se añade a tu lista para adaptar el CV. Si no, elige una de tus ofertas abajo.</div>
-<div class="row"><input id="ofco" value="${esc(offer.company)}" placeholder="Empresa" style="flex:1"><input id="ofro" value="${esc(offer.role)}" placeholder="Puesto" style="flex:1"></div>
-<textarea id="ofde" placeholder="Pega aquí el texto completo de la oferta">${esc(offer.desc)}</textarea><div class="row"><button id="ofuse">Usar esta oferta</button></div></div>`;
 const WZ_STEPS=(L)=>{const A=S.auto,fill=v=>!!String(v||'').trim();
-const chips=(id,arr)=>`<div class="exs"><span class="lbl">Toca un ejemplo para usarlo:</span>${arr.map(t=>`<button type="button" class="chip" data-ex="${id}" data-txt="${esc(t)}">${esc(t)}</button>`).join('')}</div>`;
+const chips=(id,arr)=>`<div class="exs"><span class="lbl">Toca un ejemplo para usarlo:</span>${arr.map(t=>`<button type="button" class="exchip" data-ex="${id}" data-txt="${esc(t)}">${esc(t)}</button>`).join('')}</div>`;
 const box=(why,tip)=>`<div class="why"><b>¿Para qué sirve?</b> ${why}</div><div class="tip"><b>Consejo:</b> ${tip}</div>`;
 return [
 {n:'Qué ofreces',ok:fill(S.me),h:`<h3>¿Qué sabes hacer y qué ofreces?</h3>${box('La IA lo lee antes de escribir cada mensaje, para que suene a ti, y para decidir si una empresa encaja contigo.','una o dos frases: qué haces, para quién y qué consigues con ello.')}<textarea id="me" placeholder="Escribe aquí con tus palabras…">${esc(S.me)}</textarea>${chips('me',['Desarrollador frontend con 2 años de experiencia: creo webs y apps rápidas con React, de principio a fin.','Desarrollo webs y apps para hostelería: cartas digitales, reservas y gestión de turnos.'])}`},
@@ -156,17 +207,17 @@ return [
 {n:'Qué buscar',ok:fill(A.q),h:`<h3>¿Qué ofertas de trabajo quieres buscar?</h3>${box('La app busca empresas que están contratando ahora. Si una empresa busca a alguien como tú, ya tiene necesidad y presupuesto: es el mejor momento para contactarla.','separa varias palabras con <b>OR</b> para buscar todas a la vez. Cuantas menos palabras, más resultados.')}<input id="fq" value="${esc(A.q)}" placeholder="palabras clave">${chips('fq',['react OR frontend','javascript OR typescript','vue OR angular'])}`},
 {n:'Zona',ok:true,h:`<h3>¿En qué zona del mundo?</h3>${box('Limita la búsqueda a empresas de una región.','para ver ofertas de cualquier país, elige <b>Todo el mundo</b>. Si prefieres una zona concreta, elígela aquí.')}<select id="fr"><option value="">Todo el mundo (sin filtro)</option><option value="eu,uk">Europa y Reino Unido</option><option value="north_america">Norteamérica</option><option value="latam">Latinoamérica</option><option value="apac">Asia-Pacífico</option><option value="mena,africa">Oriente Medio y África</option><option value="global">Remoto abierto a cualquier país</option></select>`},
 {n:'Nivel y fecha',ok:true,h:`<h3>¿Qué nivel y cuán recientes?</h3>${box('El nivel filtra el tipo de puesto. Los días limitan a ofertas publicadas hace poco: las recientes aún tienen pocos candidatos y es más fácil que respondan.','empieza con 7 días para lo más fresco; sube a 14 o 30 si salen pocos resultados.')}<label>Nivel</label><select id="fs"><option value="">Cualquier nivel</option><option>middle</option><option>senior</option></select><label>Publicadas en los últimos (días)</label><input id="fd" type="number" value="${esc(A.days)}" min="1">`},
-{n:'Automático',ok:true,h:`<h3>¿Quieres que busque por ti?</h3>${box('En modo automático, la app busca ofertas y prepara borradores cada cierto tiempo mientras la Terminal esté abierta. <b>Tú apruebas todo antes de enviar nada.</b>','déjalo apagado al principio y usa «Buscar» a mano hasta que veas que los resultados te gustan.')}<label class="chk"><input type="checkbox" id="aon" ${A.on?'checked':''}> Activar el modo automático</label><label>Repetir cada (horas)</label><input id="ah" type="number" value="${A.hours}" min="1"><div class="mut">${A.last?'Última ejecución: '+new Date(A.last).toLocaleTimeString('es-ES'):'Aún sin ejecutar'} ${esc(A.msg||'')}</div><div class="row"><button id="arun" ${wk()?'disabled':''}>Ejecutar ahora</button></div>`},
+{n:'Automático',ok:true,h:`<h3>¿Quieres que busque por ti?</h3>${box('En modo automático, la app busca ofertas y prepara borradores cada cierto tiempo mientras la Terminal esté abierta. <b>Tú apruebas todo antes de enviar nada.</b>','déjalo apagado al principio y usa «Buscar» a mano hasta que veas que los resultados te gustan.')}<label class="chk"><input type="checkbox" id="aon" ${A.on?'checked':''}> Activar el modo automático</label><label>Repetir cada (horas)</label><input id="ah" type="number" value="${A.hours}" min="1"><div class="mut">${A.last?'Última ejecución: '+new Date(A.last).toLocaleTimeString('es-ES'):'Aún sin ejecutar'} ${esc(A.msg||'')}</div><div class="row"><button id="arun" ${working()?'disabled':''}>Ejecutar ahora</button></div>`},
 {n:'Tus contactos',ok:true,h:`<h3>¿Tienes contactos propios? <span class="mut">(opcional)</span></h3>${box('Si ya conoces empresas o personas a las que quieres escribir, añádelas aquí y la app también las puntúa y les redacta un mensaje.','una persona por línea con este formato: <b>Nombre, Cargo, Empresa, nota</b>.')}<textarea id="new" placeholder="Marc D., Fundador, Atlas, contrata 3 SDRs"></textarea><div class="row"><button id="add">Añadir contactos</button></div>`},
-{n:'Listo',ok:true,fin:true,h:`<h3>¡Todo listo! Ahora lanza la búsqueda</h3><div class="why">Revisa que no falte nada. Toca un apartado para volver a él.</div>${[['Qué ofreces',fill(S.me),0],['Cliente ideal',fill(S.icp),1],['Disponibilidad',fill(S.avail),2],['Qué buscar',fill(A.q),3]].map(([a,b,i])=>`<button type="button" class="chk2 ${b?'ok':''}" data-goto="${i}">${b?'✔':'○'} ${a}</button>`).join('')}<div class="steps"><b>1.</b> Pulsa <b>Buscar</b> para traer empresas que contratan.<br><b>2.</b> Pulsa <b>Puntuar y redactar</b>: la IA las ordena y escribe un mensaje para cada una.<br><b>3.</b> Ve a «2 · Aprobar» para revisar y enviar tú mismo.</div><div class="row"><button class="pri" id="find" ${wk()?'disabled':''}>Buscar</button><button id="week" ${wk()?'disabled':''}>Última semana</button><button class="pri" id="go" ${wk()||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div>`}
+{n:'Listo',ok:true,fin:true,h:`<h3>¡Todo listo! Ahora lanza la búsqueda</h3><div class="why">Revisa que no falte nada. Toca un apartado para volver a él.</div>${[['Qué ofreces',fill(S.me),0],['Cliente ideal',fill(S.icp),1],['Disponibilidad',fill(S.avail),2],['Qué buscar',fill(A.q),3]].map(([a,b,i])=>`<button type="button" class="chk2 ${b?'ok':''}" data-goto="${i}">${b?'✔':'○'} ${a}</button>`).join('')}<div class="wzsteps"><b>1.</b> Pulsa <b>Buscar</b> para traer empresas que contratan.<br><b>2.</b> Pulsa <b>Puntuar y redactar</b>: la IA las ordena y escribe un mensaje para cada una.<br><b>3.</b> Ve a «2 · Aprobar» para revisar y enviar tú mismo.</div><div class="row"><button class="pri" id="find" ${working()?'disabled':''}>Buscar</button><button id="week" ${working()?'disabled':''}>Última semana</button><button class="pri" id="go" ${working()||!sampleOk?'disabled':''}>Puntuar y redactar (${L.filter(l=>l.status==='new').length})</button></div>`}
 ]};
 function wizard(L){const st=WZ_STEPS(L),n=st.length;
 return `<div class="car"><div class="carhead"><span id="cnt">Paso 1 de ${n}</span><span class="mut">Desliza → o usa los botones</span></div><div class="progress"><i id="bar"></i></div>
 <div class="trk">${st.map((s,i)=>`<section class="sl"><div class="stepn">Paso ${i+1} · ${esc(s.n)}</div>${s.h}</section>`).join('')}</div>
 <div class="carnav"><button type="button" id="cprev">← Anterior</button><div class="dots">${st.map((s,i)=>`<button type="button" class="dot ${s.ok?'done':''}" data-goto="${i}" aria-label="Paso ${i+1}: ${esc(s.n)}"></button>`).join('')}</div><button type="button" class="pri" id="cnext">Siguiente →</button></div></div>`}
-function carBind(){const t=document.querySelector('.trk');if(!t)return;const n=t.children.length,q=s=>document.querySelector(s),pitch=()=>t.children[1].offsetLeft-t.children[0].offsetLeft;
+function carBind(){const t=document.querySelector('.trk');if(!t)return;const n=t.children.length,q=s=>document.querySelector(s),pitch=()=>(t.children[1].offsetLeft-t.children[0].offsetLeft)||1;
 const upd=()=>{q('#cnt').textContent='Paso '+(slide+1)+' de '+n;q('#bar').style.width=((slide+1)/n*100)+'%';document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===slide));q('#cprev').disabled=slide===0;q('#cnext').disabled=slide===n-1};
-const go=(i,smooth)=>{i=Math.max(0,Math.min(n-1,i));slide=i;t.scrollTo({left:t.children[i].offsetLeft,behavior:smooth?'smooth':'auto'});upd()};
+const go=(i,smooth)=>{i=Math.max(0,Math.min(n-1,i));slide=i;const x=t.children[i].offsetLeft;if(typeof t.scrollTo==='function')t.scrollTo({left:x,behavior:smooth?'smooth':'auto'});else t.scrollLeft=x;upd()};
 go(slide,false);window.onresize=()=>go(slide,false);
 t.onscroll=()=>{const i=Math.round(t.scrollLeft/pitch());if(i!==slide){slide=i;upd()}};
 q('#cprev').onclick=()=>go(slide-1,true);q('#cnext').onclick=()=>go(slide+1,true);
@@ -178,17 +229,20 @@ window.onmousemove=e=>{if(dn)t.scrollLeft=s0-(e.clientX-x0)};
 window.onmouseup=()=>{if(!dn)return;dn=false;t.style.scrollSnapType='';t.classList.remove('drag');go(Math.round(t.scrollLeft/pitch()),true)};
 if(!window._ck){window._ck=1;document.addEventListener('keydown',e=>{if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;if(e.key==='ArrowRight')q('#cnext')&&q('#cnext').click();if(e.key==='ArrowLeft')q('#cprev')&&q('#cprev').click()})}}
 
+let lim=30;const sortL=()=>[...S.leads].sort((a,b)=>(b.score??-1)-(a.score??-1));
+const leadsBar=()=>{const N=S.leads.length,n=S.leads.filter(l=>l.status==='new').length;return N?`<div class="card leadsbar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="sp mut">Mostrando ${Math.min(lim,N)} de ${N} leads, ordenados por encaje</span>${n?`<button id="clr">Borrar los no procesados (${n})</button>`:''}</div>`:''};
+const leadsMore=()=>S.leads.length>lim?`<div class="row"><button id="more">Mostrar más (${S.leads.length-lim})</button></div>`:'';
 function render(){
   const L=S.leads,ws=weekStart();
-  const wm=S.meetings.filter(m=>new Date(m.when)>=ws).length;
-  $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wm]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
-  $('#nav').innerHTML=TABS.map(([k,n])=>`<button class="${k===tab?'on':''}" data-t="${k}"><img class="ni" src="/assets/booker-brody/icons/${IC[k]}-96.webp" alt="">${n}</button>`).join('');
-  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;if(!wk())busy='';render()});
-  const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn">${esc(busy)}</div>`:'');
-  h+=banner(tab);
+  const wkMeet=S.meetings.filter(m=>new Date(m.when)>=ws).length;
+  $('#stats').innerHTML=[['Leads',L.length],['Enviados',L.filter(l=>['sent','replied','booked','lost'].includes(l.status)).length],['Respuestas',L.filter(l=>['replied','booked'].includes(l.status)).length],['Reuniones',wkMeet]].map(([a,b])=>`<div class="st"><b>${b}</b><span>${a}</span></div>`).join('');
+  $('#nav').innerHTML=TABS.map(([k,n])=>`<button role="tab" aria-selected="${k===tab}" class="${k===tab?'on':''}" data-t="${k}"><img class="ni" src="/assets/booker-brody/icons/${IC[k]}-96.webp" alt="">${n}</button>`).join('');
+  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;if(!working())busy='';render()});
+  const v=$('#view');let h=(!sampleOk?'<div class="warn">Falta la API key. Revisa el archivo .env.</div>':'')+(busy?`<div class="warn" role="status">${esc(busy)}</div>`:'');
+  h+=banner(tab)+guideHtml();
   if(tab==='leads'){
     h+=wizard(L)+
-    leadsBar()+sortL().slice(0,lim).map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div>${link(l)}<span class="tag">${l.status}${l.score!=null?' · '+l.score:''}</span><button data-cv="${l.id}">CV</button><button data-del="${l.id}">✕</button></div>`).join('')+leadsMore();
+    leadsBar()+sortL().slice(0,lim).map(l=>`<div class="card row"><div class="sp"><b>${esc(l.name)}</b> <span class="mut">${esc(l.role)} · ${esc(l.company)}</span></div>${link(l)}<span class="tag">${ST[l.status]||l.status}${l.score!=null?' · '+l.score:''}</span><button data-cv="${l.id}">CV</button><button data-del="${l.id}" aria-label="Eliminar lead" title="Eliminar">✕</button></div>`).join('')+leadsMore();
   }
   if(tab==='approve'){
     const q=L.filter(l=>l.status==='drafted').sort((a,b)=>b.score-a.score);
@@ -202,7 +256,7 @@ function render(){
     h+=q.length?'':empty('Aún no has enviado mensajes. Cuando alguien responda, pégalo aquí.');
     h+=q.map(l=>`<div class="card"><b>${esc(l.name)}</b> <span class="mut">${esc(l.company)}</span>${l.intent?` <span class="tag">${esc(l.intent)}</span>`:''}
     <textarea data-rep="${l.id}" placeholder="Pega aquí su respuesta">${esc(l.reply||'')}</textarea>
-    <div class="row"><button data-an="${l.id}" ${wk()||!sampleOk?'disabled':''}>Analizar con Claude</button></div>
+    <div class="row"><button data-an="${l.id}" ${working()||!sampleOk?'disabled':''}>Analizar con Claude</button></div>
     ${l.suggested?`<label>Respuesta sugerida</label><textarea>${esc(l.suggested)}</textarea><div class="row"><input type="datetime-local" data-when="${l.id}" style="width:auto"><button class="pri" data-book="${l.id}">Agendar reunión</button><button data-lost="${l.id}">Cerrar</button></div>`:''}</div>`).join('');
   }
   if(tab==='cv'){
@@ -211,14 +265,15 @@ function render(){
     const l=S.leads.find(x=>String(x.id)===String(cvLead)),c=l&&l.cv;
     h+=startCard()+`<div class="card"><b>Importar desde LinkedIn</b><div class="mut">En LinkedIn: Ajustes → Privacidad de los datos → Obtener una copia de tus datos → elige Posiciones, Educación, Habilidades, Idiomas y Perfil. Puede tardar de minutos a 24 horas. Descomprime el ZIP y selecciona aquí los CSV.</div><input type="file" id="lifiles" accept=".csv" multiple><div class="row"><button id="liimp">Importar mis datos</button></div></div>
     <div class="card"><b>Tu perfil</b><div class="mut">Solo se usa lo que escribas aquí. No se inventa nada: lo que falte, el CV lo marca.</div>`+F.map(([k,n])=>`<label>${n}</label><input data-p="${k}" value="${esc(P[k])}">`).join('')+T.map(([k,n])=>`<label>${n}</label><textarea data-p="${k}">${esc(P[k])}</textarea>`).join('')+`</div>`;
-    h+=offerCard()+`<div class="card"><label>Oferta para la que crear el CV</label><select id="cvsel"><option value="">Elige una oferta…</option>${cvOpts().map(x=>`<option value="${x.id}" ${String(x.id)===String(cvLead)?'selected':''}>${esc(x.company)} · ${esc((x.role||'').replace('Contrata: ',''))}</option>`).join('')}</select>${l?link(l):''}<div class="row"><button class="pri" id="cvgen" ${wk()||!l||!P.name?'disabled':''}>Crear CV a medida</button>${!P.name?'<span class="mut">Escribe tu nombre primero.</span>':''}</div></div>`;
+    h+=offerPicker();
+    h+=`<div class="card"><label>Oferta para la que crear el CV</label><select id="cvsel"><option value="">Elige una oferta…</option>${S.leads.map(x=>`<option value="${x.id}" ${String(x.id)===String(cvLead)?'selected':''}>${esc(x.company)} · ${esc((x.role||'').replace('Contrata: ',''))}</option>`).join('')}</select>${l?link(l):''}<div class="row"><button class="pri" id="cvgen" ${working()||!l||!P.name?'disabled':''}>Crear CV a medida</button>${!P.name?'<span class="mut">Escribe tu nombre primero.</span>':''}</div></div>`;
     if(c){
-      h+=`<div class="card"><b>Encaje con la oferta${c.encaje?': '+esc(c.encaje)+'/100':''}</b>${c.aviso?'<div class="warn">'+esc(c.aviso)+'</div>':''}<div class="mut">Palabras clave de la oferta incluidas: ${esc(arr(c.palabras_clave).join(', ')||'ninguna')}</div><div class="mut">Cubre: ${esc(arr(c.cubre).join(', ')||'sin datos')}</div><div class="mut">Falta o no consta en tu perfil: ${esc(arr(c.faltan).join(', ')||'nada')}</div></div>
+      h+=`${atsBox(c)}<div class="card"><b>Encaje con la oferta</b><div class="mut">Cubre: ${esc(arr(c.cubre).join(', ')||'sin datos')}</div><div class="mut">Falta o no consta en tu perfil: ${esc(arr(c.faltan).join(', ')||'nada')}</div></div>
       <div class="card"><b>${esc(P.name)}</b> <span class="mut">${esc(c.titular||'')}</span><label>Resumen</label><textarea data-cvf="resumen">${esc(c.resumen)}</textarea><p><b>Habilidades</b> ${esc(arr(c.habilidades).join(' · '))}</p>
       ${arr(c.experiencia).map(e=>`<p><b>${esc(e.puesto||e)}</b> ${esc(e.empresa)} <span class="mut">${esc(e.fechas)}</span><br>${arr(e.logros).map(x=>'• '+esc(x)).join('<br>')}</p>`).join('')}
       ${arr(c.proyectos).map(p=>`<p><b>${esc(p.nombre||p)}</b> <span class="mut">${esc(p.tecnologias)}</span><br>${esc(p.descripcion)}</p>`).join('')}</div>
       <div class="card"><div class="row"><button id="cvpdf">Descargar PDF</button></div><label>Correo de la empresa (búscalo en la oferta o en su web)</label><input id="cvto" type="email" value="${esc(l.to||'')}" placeholder="rrhh@empresa.com"><label>Asunto</label><input data-cvf="asunto" value="${esc(c.asunto)}"><label>Mensaje</label><textarea data-cvf="email">${esc(c.email)}</textarea>
-      <div class="row"><button class="pri" id="cvsend" ${wk()?'disabled':''}>Enviar CV con el PDF adjunto</button>${l.cvSent?`<span class="mut">Enviado el ${esc(new Date(l.cvSent).toLocaleString('es-ES'))}</span>`:''}</div><div class="mut">Necesita el correo SMTP configurado en .env (ver README). Solo se envía al confirmar.</div></div>`;
+      <div class="row"><button class="pri" id="cvsend" ${working()?'disabled':''}>Enviar CV con el PDF adjunto</button>${l.cvSent?`<span class="mut">Enviado el ${esc(new Date(l.cvSent).toLocaleString('es-ES'))}</span>`:''}</div><div class="mut">Necesita el correo SMTP configurado en .env (ver README). Solo se envía al confirmar.</div></div>`;
     }
   }
   if(tab==='meets'){
@@ -228,8 +283,9 @@ function render(){
     h+=`<div class="card"><div class="bars">${c.map((n,i)=>`<div><i style="height:${n*18}px"></i>${n}<br>${days[i]}</div>`).join('')}</div></div>`;
     const ms=[...S.meetings].sort((a,b)=>new Date(a.when)-new Date(b.when));
     h+=ms.length?ms.map(m=>`<div class="card row"><b class="sp">${esc(new Date(m.when).toLocaleString('es-ES',{weekday:'short',hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'}))}</b><span>${esc(m.name)}</span><span class="mut">${esc(m.company)}</span></div>`).join(''):empty('Sin reuniones todavía. Cuando agendes una, aparecerá aquí.','booker-organizando-calendario-360');
+    if(ms.length)h+='<div class="row"><button id="ics">Descargar calendario (.ics)</button></div>';
   }
-  v.innerHTML=h;bind();
+  v.dataset.om=offerMode;v.innerHTML=h;bind();
 }
 function bind(){
   const g=s=>document.querySelector(s),on=(s,f)=>document.querySelectorAll(s).forEach(f);
@@ -237,19 +293,19 @@ function bind(){
   if(g('#me')){g('#me').oninput=e=>{S.me=e.target.value;save()};g('#icp').oninput=e=>{S.icp=e.target.value;save()};g('#av').oninput=e=>{S.avail=e.target.value;save()};
     g('#add').onclick=()=>{const t=g('#new').value;if(!t.trim())return;S.leads.push(...parseLeads(t));save();render()};
     g('#go').onclick=scoreAll;
-    if(g('#more'))g('#more').onclick=()=>{lim+=50;render()};
-    if(g('#clr'))g('#clr').onclick=async()=>{if(!confirm('¿Borrar los leads que aún no se han puntuado? Los demás se conservan.'))return;try{await fetch('/api/leads/clear',{method:'POST'})}catch(e){}await pull(true)};
     const A=S.auto;g('#fr').value=A.region;g('#fs').value=A.seniority;
     for(const [id,k] of [['#fq','q'],['#fr','region'],['#fs','seniority'],['#fd','days']])g(id).oninput=g(id).onchange=e=>{A[k]=e.target.value;save()};
     g('#week').onclick=()=>{g('#fd').value=7;A.days=7;save();g('#find').click()};
     g('#aon').onchange=e=>{A.on=e.target.checked;save()};g('#ah').oninput=e=>{A.hours=+e.target.value||6;save()};
-    g('#arun').onclick=async()=>{busy='Ejecutando… puede tardar';render();try{await fetch('/api/run',{method:'POST'})}catch(e){}busy='';await pull(true)};
+    g('#arun').onclick=async()=>{busy='Ejecutando… puede tardar';render();await flush();try{const r=await fetch('/api/run',{method:'POST'});const j=await r.json().catch(()=>({}));busy=r.ok?'':'Error: '+(j.error||r.status)}catch(e){busy='Error: no se pudo contactar con el servidor'}await pull(true);render()};
     g('#find').onclick=async()=>{busy='Buscando empresas…';render();
       try{const q=new URLSearchParams({q:g('#fq').value,region:g('#fr').value,seniority:g('#fs').value,days:g('#fd').value,limit:40});
         const r=await fetch('/api/leads?'+q),j=await r.json();if(!r.ok)throw new Error(j.error);
-        const have=new Set(S.leads.map(l=>l.company.toLowerCase()));let n=0;
-        for(const l of j.leads){const k=l.company.toLowerCase();if(have.has(k))continue;have.add(k);S.leads.push({id:Date.now()+Math.random(),status:'new',...l});n++}
+        const have=new Set(S.leads.map(l=>(l.company||'').toLowerCase()));let n=0;
+        for(const l of j.leads){const k=(l.company||'').toLowerCase();if(have.has(k))continue;have.add(k);S.leads.push({id:Date.now()+Math.random(),status:'new',...l});n++}
         save();busy=j.warn||`${n} empresas nuevas añadidas.`}catch(e){busy='Error: '+e.message}render()}}
+  if(g('#more'))g('#more').onclick=()=>{lim+=50;render()};
+  if(g('#clr'))g('#clr').onclick=async()=>{if(!confirm('¿Borrar los leads que aún no se han puntuado? Los demás se conservan.'))return;await flush();try{await fetch('/api/leads/clear',{method:'POST'})}catch(e){}await pull(true);render()};
   on('[data-del]',b=>b.onclick=()=>{S.leads=S.leads.filter(l=>String(l.id)!==b.dataset.del);save();render()});
   const f=id=>S.leads.find(l=>String(l.id)===String(id));
   on('[data-msg]',t=>t.oninput=()=>{f(t.dataset.msg).msg=t.value;save()});
@@ -257,19 +313,21 @@ function bind(){
   on('[data-li]',b=>b.onclick=async()=>{const l=f(b.dataset.li);try{await navigator.clipboard.writeText(l.msg)}catch(e){}window.open('https://www.linkedin.com/search/results/people/?keywords='+encodeURIComponent(l.company+' CTO OR engineering manager OR head of engineering'),'_blank')});
   if(g('#liimp'))g('#liimp').onclick=async()=>{const fs=[...g('#lifiles').files];if(!fs.length){busy='Selecciona primero los archivos CSV.';render();return}
     try{const r=await importLinkedIn(fs);busy=r?'Importado: '+r:'No reconocí ningún archivo. Usa Positions.csv, Education.csv, Skills.csv, Languages.csv o Profile.csv.'}catch(e){busy='Error al leer: '+e.message}render()};
+  on('[data-om]',b=>b.onclick=()=>{offerMode=b.dataset.om;render()});
+  [['#otitle','title'],['#ocomp','company'],['#otext','text'],['#ourl','url']].forEach(([id,k])=>{if(g(id))g(id).oninput=e=>{draftOffer[k]=e.target.value}});
+  if(g('#ofetch'))g('#ofetch').onclick=async()=>{const u=(draftOffer.url||'').trim();if(!u){busy='Pega primero el enlace de la oferta.';render();return}busy='Leyendo la oferta…';render();
+    try{const r=await fetch('/api/offer/fetch',{method:'POST',headers:J,body:JSON.stringify({url:u})}),j=await r.json();if(!r.ok)throw new Error(j.error);draftOffer={title:j.title,company:j.company,text:j.text,url:u};offerMode='paste';busy='Oferta leída. Revisa el texto y pulsa «Usar esta oferta».'}catch(e){busy='Error: '+e.message}render()};
+  if(g('#ouse'))g('#ouse').onclick=()=>{const D=draftOffer;if((D.text||'').trim().length<80){busy='Pega el texto completo de la oferta (al menos unas líneas).';render();return}
+    const id=Date.now()+Math.random();S.leads.unshift({id,status:'custom',name:D.company||'Oferta propia',role:'Contrata: '+(D.title||'Puesto'),company:D.company||'Oferta propia',note:D.url||'',desc:D.text.slice(0,6000)});cvLead=String(id);offerMode='list';draftOffer={title:'',company:'',text:'',url:''};save();busy='Oferta añadida. Ahora pulsa «Crear CV a medida».';render()};
   on('[data-cv]',b=>b.onclick=()=>{cvLead=b.dataset.cv;tab='cv';render()});
   on('[data-p]',t=>t.oninput=()=>{S.profile[t.dataset.p]=t.value;save()});
   on('[data-cvf]',t=>t.oninput=()=>{f(cvLead).cv[t.dataset.cvf]=t.value;save()});
   if(g('#cvfile')){
     g('#cvnotes').oninput=e=>{cvNotes=e.target.value};
-    for(const [id,k] of [['#ofco','company'],['#ofro','role'],['#ofde','desc']])g(id).oninput=e=>{offer[k]=e.target.value};
-    g('#ofuse').onclick=()=>{if(!offer.company.trim()||offer.desc.trim().length<40){busy='Escribe la empresa y pega el texto de la oferta.';render();return}
-      const l={id:Date.now()+Math.random(),status:'manual',name:offer.company.trim(),role:'Contrata: '+(offer.role.trim()||'Puesto'),company:offer.company.trim(),desc:offer.desc.trim().slice(0,6000),note:''};
-      S.leads.push(l);cvLead=l.id;offer={company:'',role:'',desc:''};save();busy='Oferta añadida y seleccionada.';render()};
-    g('#cvup').onclick=async()=>{const f=g('#cvfile').files[0];if(!f){busy='Selecciona primero un archivo.';render();return}
-      if(f.size>8e6){busy='El archivo pesa demasiado (máx. 8 MB).';render();return}
+    g('#cvup').onclick=async()=>{const fl=g('#cvfile').files[0];if(!fl){busy='Selecciona primero un archivo.';render();return}
+      if(fl.size>8e6){busy='El archivo pesa demasiado (máximo 8 MB).';render();return}
       busy='Leyendo tu CV… puede tardar';render();
-      try{await parseInto({name:f.name,data:await b64(f)})}catch(e){busy='Error: '+e.message}render()};
+      try{await parseInto({name:fl.name,data:await b64(fl)})}catch(e){busy='Error: '+e.message}render()};
     g('#cvscratch').onclick=async()=>{if(cvNotes.trim().length<30){busy='Cuéntame un poco más (unas líneas).';render();return}
       busy='Creando tu perfil… puede tardar';render();
       try{await parseInto({text:cvNotes,mode:'notes'})}catch(e){busy='Error: '+e.message}render()};
@@ -277,18 +335,19 @@ function bind(){
   if(g('#cvsel')){
     g('#cvsel').onchange=e=>{cvLead=e.target.value;render()};
     g('#cvgen').onclick=async()=>{const l=f(cvLead);busy='Creando el CV a medida… puede tardar un minuto';render();
-      try{const r=await fetch('/api/cv/generate',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,lead:{id:l.id,role:l.role,company:l.company,note:l.note,desc:l.desc}})});const j=await r.json();if(!r.ok)throw new Error(j.error);l.cv=j.cv;save();busy=''}catch(e){busy='Error: '+e.message}render()};
+      try{const r=await fetch('/api/cv/generate',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,lead:{role:l.role,company:l.company,note:l.note,desc:l.desc}})});const j=await r.json();if(!r.ok)throw new Error(j.error);l.cv=j.cv;save();busy=''}catch(e){busy='Error: '+e.message}render()};
     if(g('#cvpdf')){
       g('#cvpdf').onclick=async()=>{const l=f(cvLead);try{const r=await fetch('/api/cv/pdf',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,cv:l.cv})});if(!r.ok)throw new Error((await r.json()).error);const a=document.createElement('a');a.href=URL.createObjectURL(await r.blob());a.download=`CV-${S.profile.name||'candidato'}-${l.company}.pdf`.replace(/\s+/g,'-');a.click()}catch(e){busy='Error: '+e.message;render()}};
       g('#cvsend').onclick=async()=>{const l=f(cvLead),to=g('#cvto').value.trim();l.to=to;save();
         if(!/^\S+@\S+\.\S+$/.test(to)){busy='Escribe un correo de empresa válido.';render();return}
         if(!confirm(`¿Enviar tu CV a ${to} (${l.company})?`))return;busy='Enviando…';render();
         try{const r=await fetch('/api/cv/send',{method:'POST',headers:J,body:JSON.stringify({profile:S.profile,cv:l.cv,to,subject:l.cv.asunto,body:l.cv.email})});const j=await r.json();if(!r.ok)throw new Error(j.error);l.cvSent=Date.now();save();busy='CV enviado a '+to}catch(e){busy='Error: '+e.message}render()}}}
-  on('[data-skip]',b=>b.onclick=()=>{f(b.dataset.skip).status='lost';save();render()});
+  on('[data-skip]',b=>b.onclick=()=>{f(b.dataset.skip).status='discarded';save();render()});
   on('[data-rep]',t=>t.oninput=()=>{f(t.dataset.rep).reply=t.value;save()});
   on('[data-an]',b=>b.onclick=()=>analyze(f(b.dataset.an).id));
   on('[data-lost]',b=>b.onclick=()=>{f(b.dataset.lost).status='lost';save();render()});
-  on('[data-book]',b=>b.onclick=()=>{const l=f(b.dataset.book),w=document.querySelector(`[data-when="${b.dataset.book}"]`).value;if(!w)return;S.meetings.push({when:w,name:l.name,company:l.company});l.status='booked';save();tab='meets';flash=true;setTimeout(()=>{flash=false;if(tab==='meets')render()},4000);render()});
+  if(g('#ics'))g('#ics').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics(S.meetings)],{type:'text/calendar'}));a.download='reuniones-booker.ics';a.click()};
+  on('[data-book]',b=>b.onclick=()=>{const l=f(b.dataset.book),w=document.querySelector(`[data-when="${b.dataset.book}"]`).value;if(!w){busy='Elige día y hora para la reunión.';render();return}if(S.meetings.some(m=>m.when===w)&&!confirm('Ya tienes una reunión a esa hora. ¿Agendar igualmente?'))return;S.meetings.push({when:w,name:l.name,company:l.company,leadId:String(l.id)});l.status='booked';save();tab='meets';flash=true;setTimeout(()=>{flash=false;if(tab==='meets')render()},4000);render()});
 }
-render();
+pull(true).finally(render);
 </script></body></html>
