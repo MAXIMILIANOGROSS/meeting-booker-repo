@@ -61,7 +61,7 @@ main{position:relative;z-index:1}
 :root:root:root{color-scheme:dark;--bg:#0a1a2c;--fg:#eaf4f8;--card:rgba(11,31,54,.78);--mut:#a9bfcd;--bd:rgba(72,197,201,.32);--ac:#FFB43B;--ok:#48C5C9;--glow:0 0 0 1px rgba(72,197,201,.16),0 10px 34px rgba(0,0,0,.35),0 0 22px rgba(72,197,201,.09)}
 html body{background:linear-gradient(180deg,rgba(5,14,26,.80),rgba(5,14,26,.58)),url(/assets/booker-brody/backgrounds/marte-1600.webp) center/cover fixed #0a1a2c}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(rgba(72,197,201,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(72,197,201,.055) 1px,transparent 1px);background-size:38px 38px;-webkit-mask-image:linear-gradient(#000,transparent 88%);mask-image:linear-gradient(#000,transparent 88%)}
-.card,.st,.warn,.brand,.foot,.guide,.steps li,#view>.mut{background:var(--card)!important;-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--bd);box-shadow:var(--glow);color:var(--fg)}
+.card,.st,.warn,.brand,.foot,.guide,.steps li,#view>.mut{background:var(--card)!important;border:1px solid var(--bd);box-shadow:var(--glow);color:var(--fg)}
 .brand{border-top:2px solid var(--teal)}.brand .sub,.mut,label{color:var(--mut)}
 h1{background:linear-gradient(90deg,#fff,var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
 button{background:rgba(255,255,255,.06);color:var(--fg);border:1px solid var(--bd)}button:hover:not(:disabled){border-color:var(--teal);box-shadow:0 0 14px rgba(72,197,201,.3)}
@@ -187,7 +187,7 @@ const nextHint=()=>{const L=S.leads;
 const guideHtml=()=>(tab==='cv'?stepsCv():`<div class="guide" role="note"><b>Siguiente paso:</b> ${nextHint()}</div>`)+`<details class="help"><summary>¿Qué significan estas palabras?</summary><p><b>Lead</b>: una empresa a la que podrías escribir.</p><p><b>Encaje</b>: de 0 a 100, cuánto se parece esa empresa a lo que ofreces.</p><p><b>ATS</b>: el programa que filtra CV en muchas empresas; busca las palabras clave de la oferta.</p><p><b>CV a medida</b>: tu CV reordenado para cada oferta. Solo usa lo que tú has escrito: no inventa nada.</p></details>`;
 let flash=false,cvLead='',slide=0;const working=()=>/…|puede tardar/.test(busy);const arr=x=>Array.isArray(x)?x:[],J={'Content-Type':'application/json'};const M='/assets/booker-brody/mascot/';
 /* archivo del CV: se recuerda y se muestra aunque la página se repinte */
-let cvFileName='',cvFileSt='';try{cvFileName=localStorage.getItem('bb_cvfile')||'';cvFileSt=cvFileName?'ok':''}catch(e){}
+let cvFileName='',cvFileSt='',cvFileObj=null;try{cvFileName=localStorage.getItem('bb_cvfile')||'';cvFileSt=cvFileName?'ok':''}catch(e){}
 /* contador de espera: que se vea que la IA sigue trabajando */
 let _bs=0,_bl='';setInterval(()=>{const el=document.querySelector('#view .warn[role="status"]');if(!el||!working()){_bs=0;_bl='';return}
   if(busy!==_bl){_bl=busy;_bs=Date.now()}const s=Math.floor((Date.now()-_bs)/1000);
@@ -329,10 +329,11 @@ function bind(){
   on('[data-p]',t=>t.oninput=()=>{S.profile[t.dataset.p]=t.value;save()});
   on('[data-cvf]',t=>t.oninput=()=>{f(cvLead).cv[t.dataset.cvf]=t.value;save()});
   if(g('#cvfile')){
+    if(cvFileObj&&!g('#cvfile').files.length){try{const dt=new DataTransfer();dt.items.add(cvFileObj);g('#cvfile').files=dt.files}catch(e){}}
     g('#cvnotes').oninput=e=>{cvNotes=e.target.value};
     g('#cvup').onclick=async()=>{const fl=g('#cvfile').files[0];if(!fl){busy='Selecciona primero un archivo.';render();return}
       if(fl.size>8e6){busy='El archivo pesa demasiado (máximo 8 MB).';render();return}
-      cvFileName=fl.name;cvFileSt='leyendo';busy='Leyendo tu CV… puede tardar';render();
+      cvFileObj=fl;cvFileName=fl.name;cvFileSt='leyendo';busy='Leyendo tu CV… puede tardar';render();
       try{await parseInto({name:fl.name,data:await b64(fl)});cvFileName=fl.name;cvFileSt='ok';try{localStorage.setItem('bb_cvfile',fl.name)}catch(e){}}catch(e){cvFileSt='err';busy='Error: '+e.message}render()};
     g('#cvscratch').onclick=async()=>{if(cvNotes.trim().length<30){busy='Cuéntame un poco más (unas líneas).';render();return}
       busy='Creando tu perfil… puede tardar';render();
@@ -356,4 +357,10 @@ function bind(){
   on('[data-book]',b=>b.onclick=()=>{const l=f(b.dataset.book),w=document.querySelector(`[data-when="${b.dataset.book}"]`).value;if(!w){busy='Elige día y hora para la reunión.';render();return}if(S.meetings.some(m=>m.when===w)&&!confirm('Ya tienes una reunión a esa hora. ¿Agendar igualmente?'))return;S.meetings.push({when:w,name:l.name,company:l.company,leadId:String(l.id)});l.status='booked';save();tab='meets';flash=true;setTimeout(()=>{flash=false;if(tab==='meets')render()},4000);render()});
 }
 pull(true).finally(render);
+/* bb-select-hold: no redibujar la página mientras un desplegable está abierto */
+(()=>{const r=render;let hold=false,pend=false,tm=0;const rel=()=>{clearTimeout(tm);hold=false;if(pend){pend=false;r()}};
+document.addEventListener('focusin',e=>{if(e.target.tagName==='SELECT'){hold=true;clearTimeout(tm);tm=setTimeout(rel,20000)}},true);
+document.addEventListener('focusout',e=>{if(e.target.tagName==='SELECT')setTimeout(rel,0)},true);
+document.addEventListener('change',e=>{if(e.target.tagName==='SELECT')setTimeout(rel,0)},true);
+render=function(){if(hold){pend=true;return}r()};})();
 </script></body></html>
